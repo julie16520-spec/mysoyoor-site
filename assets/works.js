@@ -2,9 +2,8 @@
 //   cat:    "app" | "video" | "book" | "marketing" | "item"
 //   name:   이름
 //   year:   연도
-//   href:   누르면 갈 곳
-//   images: 첫 화면 더미에 쌓일 그림들 (assets/shots/ 안, 세로든 가로든 jpg)
-//   video:  (선택) 더미 카드에서 소리 없이 도는 짧은 영상 mp4
+//   href:   누르면 갈 곳. 없으면 눌리지 않는 줄 (아직 안 낸 작업)
+//   icon:   줄에 마우스를 올리면 커서 옆에 뜨는 그림 (assets/icons/ 안)
 window.SOYO_CATEGORIES = [
   { id: "app", label: "App" },
   { id: "video", label: "Video" },
@@ -17,11 +16,7 @@ window.SOYO_WORKS = [
   {
     cat: "app", name: "NoJudgeMan", year: 2026,
     href: "https://apps.apple.com/kr/app/%EB%85%B8%EC%A0%80%EC%A7%80%EB%A7%A8/id6820324609",
-    images: ["assets/shots/nojudgeman-1.jpg", "assets/shots/nojudgeman-2.jpg", "assets/shots/nojudgeman-3.jpg", "assets/shots/nojudgeman-4.jpg", "assets/shots/nojudgeman-5.jpg"],
+    icon: "assets/icons/nojudgeman.png",
   },
-  {
-    cat: "app", name: "KanKan", year: 2026,
-    href: "kankan/",
-    images: ["assets/shots/kankan-1.jpg", "assets/shots/kankan-2.jpg", "assets/shots/kankan-3.jpg", "assets/shots/kankan-4.jpg", "assets/shots/kankan-5.jpg"],
-  },
+  { cat: "app", name: "KanKan", year: 2026, icon: "assets/icons/kankan.png" },
 ];

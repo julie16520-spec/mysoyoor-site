@@ -30,20 +30,19 @@
     title.replaceChildren(filter ? label[filter] : "Work", sup(filter ? count(filter) : works.length));
     catLinks.querySelectorAll("a").forEach(a => a.toggleAttribute("aria-current", a.dataset.cat === filter));
     list.replaceChildren(...works.filter(w => !filter || w.cat === filter).map((w, i) => {
-      const li = document.createElement("li"), a = document.createElement("a");
+      // href 가 없는 작업(아직 안 낸 것)은 눌리지 않는 줄
+      const li = document.createElement("li"), a = document.createElement(w.href ? "a" : "div");
       li.style.setProperty("--i", i);
-      a.href = w.href; a.target = "_blank"; a.rel = "noopener";
+      if (w.href) { a.href = w.href; a.target = "_blank"; a.rel = "noopener"; }
       a.innerHTML = `<span class="y"></span><span class="n"></span><span class="t"></span><span class="go" aria-hidden="true">↗</span>`;
       a.querySelector(".y").textContent = w.year;
       a.querySelector(".n").textContent = w.name;
       a.querySelector(".t").textContent = label[w.cat] || "";
-      // 커서를 따라다니는 그림. 그림이 여럿이면 움직일 때마다 넘어간다
-      let k = 0, last = 0;
-      a.onpointerenter = () => { if (w.images?.length) { peek.src = w.images[0]; peek.classList.add("on"); } };
+      // 커서를 따라다니는 아이콘
+      a.onpointerenter = () => { if (w.icon) { peek.src = w.icon; peek.classList.add("on"); } };
       a.onpointermove = e => {
         peek.style.setProperty("--x", e.clientX + 24 + "px");
         peek.style.setProperty("--y", e.clientY - peek.offsetHeight / 2 + "px");
-        if (w.images?.length > 1 && Math.abs(e.clientX - last) > 90) { last = e.clientX; peek.src = w.images[++k % w.images.length]; }
       };
       a.onpointerleave = () => peek.classList.remove("on");
       li.append(a); io.observe(li);
