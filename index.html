@@ -7,55 +7,41 @@
 <meta name="description" content="SOYO 소요. 앱, 영상, 출판, 마케팅, 아이템.">
 <meta property="og:title" content="SOYO 소요">
 <meta property="og:description" content="앱, 영상, 출판, 마케팅, 아이템.">
-<meta name="theme-color" content="#f3f3f1">
+<meta name="theme-color" content="#c0c0c0">
 <link rel="icon" href="favicon.png">
 <link rel="preload" href="assets/fonts/plex-mono-500.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="assets/site.css">
-<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js" } }</script>
 </head>
 <body>
 <a class="skip" href="#works">본문으로 건너뛰기</a>
 
 <header class="bar">
   <a class="logo" href="./" aria-label="SOYO 처음으로">SOYO</a>
-  <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">
-    <span>Menu</span><i class="checker" aria-hidden="true"></i>
-  </button>
+  <button class="face" type="button" aria-label="지뢰찾기 판 다시 보기"><canvas width="16" height="16" aria-hidden="true"></canvas></button>
+  <nav class="nav" aria-label="사이트 메뉴">
+    <a href="#works">작업</a>
+    <a href="#contact">연락</a>
+  </nav>
 </header>
 
-<nav id="menu" class="menu" aria-label="사이트 메뉴" hidden>
-  <a href="#works">작업</a>
-  <a href="#contact">연락</a>
-  <p class="menu-foot">contact@mysoyoor.com</p>
-</nav>
-
 <main>
-  <!-- 1. 흰 화면: 칸칸 고양이 모양 물방울 안으로 앱 화면이 비친다 -->
-  <section class="intro" aria-label="SOYO">
-    <canvas id="blob" aria-hidden="true"></canvas>
+  <!-- 첫 화면: 회색 지뢰찾기 판. 칸이 깔리고 열리며 깃발이 꽂혀 SOYO 가 된다 (처음에만 움직임). 아래로는 목록 -->
+  <section class="board" id="board" aria-label="SOYO">
     <h1 class="visually-hidden">SOYO 소요</h1>
+    <canvas aria-hidden="true"></canvas>
   </section>
 
-  <!-- 2. 검은 화면: 입체 칸칸 고양이 둘레로 앱 화면 카드가 돈다 (스크롤로 회전) -->
-  <section class="orbit" id="orbit" aria-label="작업 화면">
-    <div class="orbit-stick">
-      <canvas id="scene" aria-hidden="true"></canvas>
-    </div>
-  </section>
-
-  <!-- 3. 작업: 분류 탭 + 큰 이름 줄. 마우스를 올리면 그 작업 그림이 따라온다. 목록은 assets/works.js 에 -->
   <section class="works" id="works" aria-labelledby="works-title">
-    <h2 id="works-title" class="works-title">작업</h2>
+    <h2 id="works-title" class="visually-hidden">작업</h2>
     <div class="tabs" role="toolbar" aria-label="작업 분류"></div>
-    <ol class="app-list" aria-live="polite"></ol>
+    <ol class="index" aria-live="polite"></ol>
     <img class="follow" alt="" aria-hidden="true">
   </section>
 
-  <!-- 5. 연락 -->
   <section class="contact" id="contact" aria-labelledby="contact-title">
     <h2 id="contact-title" class="visually-hidden">연락</h2>
-    <a class="mail" href="mailto:contact@mysoyoor.com">contact@<br>mysoyoor.com</a>
+    <a class="mail" href="mailto:contact@mysoyoor.com">contact@mysoyoor.com</a>
     <dl class="facts">
       <dt>상호</dt><dd>소요 (SOYO)</dd>
       <dt>대표</dt><dd>조진석</dd>
@@ -71,6 +57,6 @@
 </footer>
 
 <script src="assets/works.js"></script>
-<script type="module" src="assets/app.js"></script>
+<script src="assets/app.js"></script>
 </body>
 </html>
