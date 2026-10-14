@@ -11,7 +11,6 @@
   document.querySelector(".cats").replaceChildren(...cats.map(c => {
     const li = document.createElement("li"), a = document.createElement("a");
     a.href = "#work"; a.textContent = c.label; a.append(sup(count(c.id)));
-    if (!count(c.id)) a.setAttribute("aria-disabled", "true"), a.tabIndex = -1;
     a.onclick = () => { filter = c.id; render(); };
     li.append(a); return li;
   }));
@@ -20,12 +19,12 @@
   const filters = document.querySelector(".filters");
   const list = document.querySelector(".list");
   const peek = document.querySelector(".peek");
-  const btn = (text, id, n) => {
+  // 아무 분류도 안 눌렸으면 전부. 누른 걸 다시 누르면 풀린다. 빈 분류는 눌러도 빈 목록
+  const btn = c => {
     const b = document.createElement("button");
-    b.type = "button"; b.textContent = text; b.append(sup(n));
-    b.disabled = n === 0;
-    b.setAttribute("aria-pressed", String(filter === id));
-    b.onclick = () => { filter = id; render(); };
+    b.type = "button"; b.textContent = c.label; b.append(sup(count(c.id)));
+    b.setAttribute("aria-pressed", String(filter === c.id));
+    b.onclick = () => { filter = filter === c.id ? null : c.id; render(); };
     return b;
   };
 
@@ -33,7 +32,7 @@
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .2 });
 
   function render() {
-    filters.replaceChildren(btn("All", null, works.length), ...cats.map(c => btn(c.label, c.id, count(c.id))));
+    filters.replaceChildren(...cats.map(btn));
     list.replaceChildren(...works.filter(w => !filter || w.cat === filter).map((w, i) => {
       const li = document.createElement("li"), a = document.createElement("a");
       li.style.setProperty("--i", i);

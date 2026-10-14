@@ -14,4 +14,14 @@ window.SOYO_CATEGORIES = [
 ];
 
 window.SOYO_WORKS = [
+  {
+    cat: "app", name: "NoJudgeMan", year: 2026,
+    href: "https://apps.apple.com/kr/app/%EB%85%B8%EC%A0%80%EC%A7%80%EB%A7%A8/id6820324609",
+    images: ["assets/shots/nojudgeman-1.jpg", "assets/shots/nojudgeman-2.jpg", "assets/shots/nojudgeman-3.jpg", "assets/shots/nojudgeman-4.jpg", "assets/shots/nojudgeman-5.jpg"],
+  },
+  {
+    cat: "app", name: "KanKan", year: 2026,
+    href: "kankan/",
+    images: ["assets/shots/kankan-1.jpg", "assets/shots/kankan-2.jpg", "assets/shots/kankan-3.jpg", "assets/shots/kankan-4.jpg", "assets/shots/kankan-5.jpg"],
+  },
 ];
