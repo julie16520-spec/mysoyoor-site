@@ -7,32 +7,28 @@
   const sup = n => { const s = document.createElement("sup"); s.textContent = String(n).padStart(2, "0"); return s; };
   let filter = null;
 
-  // 첫 화면 '작업' 열: 누르면 목록으로 내려가며 그 분류만
-  document.querySelector(".cats").replaceChildren(...cats.map(c => {
+  // 위 'Work' 열: 분류를 누르면 목록 화면에 그 분류만, 'Work' 를 누르면 전부
+  const catLinks = document.querySelector(".cats");
+  catLinks.replaceChildren(...cats.map(c => {
     const li = document.createElement("li"), a = document.createElement("a");
     a.href = "#work"; a.textContent = c.label; a.append(sup(count(c.id)));
+    a.dataset.cat = c.id;
     a.onclick = () => { filter = c.id; render(); };
     li.append(a); return li;
   }));
-  document.querySelector(".total").replaceWith(sup(works.length));
+  const workLink = document.querySelector(".col .all");
+  workLink.onclick = () => { filter = null; render(); };
+  const title = document.querySelector(".head h2");
 
-  const filters = document.querySelector(".filters");
   const list = document.querySelector(".list");
   const peek = document.querySelector(".peek");
-  // 아무 분류도 안 눌렸으면 전부. 누른 걸 다시 누르면 풀린다. 빈 분류는 눌러도 빈 목록
-  const btn = c => {
-    const b = document.createElement("button");
-    b.type = "button"; b.textContent = c.label; b.append(sup(count(c.id)));
-    b.setAttribute("aria-pressed", String(filter === c.id));
-    b.onclick = () => { filter = filter === c.id ? null : c.id; render(); };
-    return b;
-  };
-
   // 줄이 화면에 들어오면 차례로 올라온다
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .2 });
 
   function render() {
-    filters.replaceChildren(...cats.map(btn));
+    // 목록 제목은 지금 보는 분류. 빈 분류는 빈 목록
+    title.replaceChildren(filter ? label[filter] : "Work", sup(filter ? count(filter) : works.length));
+    catLinks.querySelectorAll("a").forEach(a => a.toggleAttribute("aria-current", a.dataset.cat === filter));
     list.replaceChildren(...works.filter(w => !filter || w.cat === filter).map((w, i) => {
       const li = document.createElement("li"), a = document.createElement("a");
       li.style.setProperty("--i", i);
@@ -55,6 +51,15 @@
     }));
   }
   render();
+
+  // #work 면 큰 SOYO 를 걷고 목록만 새 화면으로. 그 밖엔 첫 화면
+  const route = () => {
+    document.body.classList.toggle("is-work", location.hash === "#work");
+    if (location.hash !== "#work" && filter) { filter = null; render(); }
+    scrollTo({ top: 0, behavior: "instant" });
+  };
+  addEventListener("hashchange", route);
+  route();
 
   document.querySelector(".up").onclick = () => scrollTo({ top: 0 });
 })();
