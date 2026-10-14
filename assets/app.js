@@ -11,7 +11,7 @@
   const catLinks = document.querySelector(".cats");
   catLinks.replaceChildren(...cats.map(c => {
     const li = document.createElement("li"), a = document.createElement("a");
-    a.href = "#work"; a.textContent = c.label; a.append(sup(count(c.id)));
+    a.href = "/work"; a.textContent = c.label; a.append(sup(count(c.id)));
     a.dataset.cat = c.id;
     a.onclick = () => { filter = c.id; render(); };
     li.append(a); return li;
@@ -52,20 +52,23 @@
   }
   render();
 
-  // #work 면 큰 SOYO 를 걷고 목록만 새 화면으로. 그 밖엔 첫 화면
+  // /work 면 큰 SOYO 를 걷고 목록만 새 화면으로. 그 밖엔 첫 화면.
+  // 주소는 history 로만 바꾸고, /work 를 바로 열면 GitHub Pages 가 work.html(index.html 복사본)을 준다
+  const isWork = () => /^\/work(\.html)?\/?$/.test(location.pathname);
   const route = () => {
-    document.body.classList.toggle("is-work", location.hash === "#work");
-    if (location.hash !== "#work" && filter) { filter = null; render(); }
+    document.body.classList.toggle("is-work", isWork());
+    if (!isWork() && filter) { filter = null; render(); }
     scrollTo({ top: 0, behavior: "instant" });
   };
-  addEventListener("hashchange", route);
+  if (location.hash === "#work") history.replaceState(null, "", "/work"); // 예전 주소
   route();
-  // SOYO 를 누르면 주소 끝에 # 없이 첫 화면으로
-  document.querySelector(".home").onclick = e => {
+  document.addEventListener("click", e => {
+    const a = e.target.closest('a[href="/work"], a[href="/"]');
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
     e.preventDefault();
-    if (location.hash) history.pushState(null, "", location.pathname + location.search);
+    if (location.pathname !== a.getAttribute("href")) history.pushState(null, "", a.getAttribute("href"));
     route();
-  };
+  });
   addEventListener("popstate", route);
 
   document.querySelector(".up").onclick = () => scrollTo({ top: 0 });

@@ -16,7 +16,7 @@ window.SOYO_WORKS = [
   {
     cat: "app", name: "NoJudgeMan", year: 2026,
     href: "https://apps.apple.com/kr/app/%EB%85%B8%EC%A0%80%EC%A7%80%EB%A7%A8/id6820324609",
-    icon: "assets/icons/nojudgeman.png",
+    icon: "/assets/icons/nojudgeman.png",
   },
-  { cat: "app", name: "KanKan", year: 2026, icon: "assets/icons/kankan.png" },
+  { cat: "app", name: "KanKan", year: 2026, icon: "/assets/icons/kankan.png" },
 ];
