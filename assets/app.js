@@ -60,6 +60,13 @@
   };
   addEventListener("hashchange", route);
   route();
+  // SOYO 를 누르면 주소 끝에 # 없이 첫 화면으로
+  document.querySelector(".home").onclick = e => {
+    e.preventDefault();
+    if (location.hash) history.pushState(null, "", location.pathname + location.search);
+    route();
+  };
+  addEventListener("popstate", route);
 
   document.querySelector(".up").onclick = () => scrollTo({ top: 0 });
 })();
