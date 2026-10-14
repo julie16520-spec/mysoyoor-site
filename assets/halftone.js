@@ -7,7 +7,7 @@
   const canvas = root.querySelector("canvas");
   const ctx = canvas.getContext("2d");
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const WORD = "SOYO", RADIUS = 80, CROP = .2;
+  const WORD = "SOYO", CROP = .2;
   const hex = h => { h = h.trim().replace("#", ""); if (h.length === 3) h = [...h].map(c => c + c).join(""); return [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16)); };
   const css = getComputedStyle(document.documentElement);
   const bg = css.getPropertyValue("--bg").trim(), inkS = css.getPropertyValue("--ink").trim();
@@ -21,7 +21,7 @@
   tg.putImageData(id, 0, 0);
   document.documentElement.style.setProperty("--grain", `url(${tile.toDataURL()})`);
 
-  let t0 = 0, w = 0, h = 0, dpr = 1, px = -1e5, py = -1e5, raf = 0, awake = true, visible = true, first = true;
+  let RADIUS = 160, t0 = 0, w = 0, h = 0, dpr = 1, px = -1e5, py = -1e5, raf = 0, awake = true, visible = true, first = true;
   let ring = { x: 0, y: 0, t: -1 }, dots = new Float32Array(0), count = 0;
 
   function layout() {
@@ -30,6 +30,8 @@
     dpr = Math.min(devicePixelRatio || 1, 2);
     canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
     const gap = w < 600 ? 4 : 6;
+    // 커서가 밀어내는 범위: 화면 폭에 맞춰 120~240px
+    RADIUS = Math.min(240, Math.max(120, w * .14));
 
     const mask = document.createElement("canvas");
     mask.width = w; mask.height = h;
@@ -79,13 +81,13 @@
         if (band > 0) { const f = band * 3.2 * (1 - age / 900); vx += dx / d * f; vy += dy / d * f; }
       }
       const dx = x - px, dy = y - py, d2 = dx * dx + dy * dy;
-      if (d2 < RADIUS * RADIUS) { const d = Math.sqrt(d2) + .001, f = (1 - d / RADIUS) * 2.6; vx += dx / d * f; vy += dy / d * f; }
+      if (d2 < RADIUS * RADIUS) { const d = Math.sqrt(d2) + .001, f = (1 - d / RADIUS) * 3; vx += dx / d * f; vy += dy / d * f; }
       vx = (vx + (hx - x) * K) * D; vy = (vy + (hy - y) * K) * D;
       x += vx; y += vy;
       if (Math.abs(vx) + Math.abs(vy) > .02 || Math.abs(x - hx) + Math.abs(y - hy) > .05) moving = true;
       else { x = hx; y = hy; vx = vy = 0; }
       dots[j] = x; dots[j + 1] = y; dots[j + 2] = vx; dots[j + 3] = vy;
-      const k = Math.min(1, Math.hypot(x - hx, y - hy) / 28);
+      const k = Math.min(1, Math.hypot(x - hx, y - hy) / 40);
       ctx.fillStyle = k > .02 ? `rgb(${ink.map((c, n) => Math.round(c + (warm[n] - c) * k))})` : inkS;
       ctx.beginPath(); ctx.arc(x, y, dots[j + 6], 0, 6.2832); ctx.fill();
     }
