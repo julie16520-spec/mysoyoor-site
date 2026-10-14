@@ -70,10 +70,10 @@ body:not(.is-work) #work { display: none; }
 .head h2 { margin: 0; font: inherit; }
 .list a, .list div { display: grid; grid-template-columns: 9ch minmax(0, 1fr) 10ch 2ch; align-items: baseline; gap: 16px;
   padding: clamp(14px, 1.8vw, 22px) 0; border-bottom: .5px solid var(--line); }
-.list .n { font: 700 clamp(30px, 5.6vw, 84px)/1 var(--sans); letter-spacing: -.035em; transition: color .3s var(--ease), transform .45s var(--ease); }
+.list .n { justify-self: start; font: 700 clamp(30px, 5.6vw, 84px)/1 var(--sans); letter-spacing: -.035em; transition: color .3s var(--ease), transform .45s var(--ease); }
 .list .y, .list .t { opacity: .45; }
 .list .go { font-family: var(--mono); opacity: 0; transform: translate(-6px, 6px); transition: opacity .3s, transform .45s var(--ease); justify-self: end; }
-.list a:hover .n, .list a:focus-visible .n, .list div:hover .n { color: var(--warm); transform: translateX(10px); }
+.list .n:hover, .list a:focus-visible .n { color: var(--warm); transform: translateX(10px); }
 .list a:hover .go, .list a:focus-visible .go { opacity: 1; transform: none; }
 .list li { opacity: 0; transform: translateY(16px); transition: opacity .7s var(--ease), transform .7s var(--ease); transition-delay: calc(var(--i, 0) * 60ms); }
 .list li.in { opacity: 1; transform: none; }

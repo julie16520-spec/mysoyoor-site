@@ -38,13 +38,14 @@
       a.querySelector(".y").textContent = w.year;
       a.querySelector(".n").textContent = w.name;
       a.querySelector(".t").textContent = label[w.cat] || "";
-      // 커서를 따라다니는 아이콘
-      a.onpointerenter = () => { if (w.icon) { peek.src = w.icon; peek.classList.add("on"); } };
-      a.onpointermove = e => {
+      // 이름 글자 위에 있을 때만 커서를 따라다니는 아이콘
+      const n = a.querySelector(".n");
+      n.onpointerenter = () => { if (w.icon) { peek.src = w.icon; peek.classList.add("on"); } };
+      n.onpointermove = e => {
         peek.style.setProperty("--x", e.clientX + 24 + "px");
         peek.style.setProperty("--y", e.clientY - peek.offsetHeight / 2 + "px");
       };
-      a.onpointerleave = () => peek.classList.remove("on");
+      n.onpointerleave = () => peek.classList.remove("on");
       li.append(a); io.observe(li);
       return li;
     }));
