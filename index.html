@@ -2,78 +2,75 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SOYO 소요 — 작고 다정한 앱을 만듭니다</title>
-<meta name="description" content="소요(SOYO)는 일상을 조금 덜 바쁘게 만드는 작은 모바일 앱을 만드는 스튜디오입니다. 칸칸, 노저지맨.">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SOYO 소요</title>
+<meta name="description" content="SOYO 소요. 앱, 영상, 출판, 마케팅, 아이템.">
 <meta property="og:title" content="SOYO 소요">
-<meta property="og:description" content="작고 다정한 앱을 만듭니다.">
+<meta property="og:description" content="앱, 영상, 출판, 마케팅, 아이템.">
+<meta name="theme-color" content="#f3f3f1">
 <link rel="icon" href="favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&display=swap">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="preload" href="assets/fonts/plex-mono-500.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="assets/site.css">
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js" } }</script>
 </head>
 <body>
-<nav class="top">
-  <a href="./">SOYO</a>
-  <a href="#apps">Apps</a>
-  <a href="#about">About</a>
-  <span class="grow"></span>
-  <a href="#contact">Contact</a>
-</nav>
+<a class="skip" href="#works">본문으로 건너뛰기</a>
 
-<header class="hero" aria-label="소요">
-  <pre id="cat" aria-hidden="true"></pre>
-  <div class="cap">
-    <b>소요 — 작고 다정한 앱을 만듭니다</b>
-    <span>Small, gentle apps · Korea · Est. 2026</span>
-  </div>
+<header class="bar">
+  <a class="logo" href="./" aria-label="SOYO 처음으로">SOYO</a>
+  <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">
+    <span>Menu</span><i class="checker" aria-hidden="true"></i>
+  </button>
 </header>
 
+<nav id="menu" class="menu" aria-label="사이트 메뉴" hidden>
+  <a href="#works">작업</a>
+  <a href="#contact">연락</a>
+  <p class="menu-foot">contact@mysoyoor.com</p>
+</nav>
+
 <main>
-  <section id="apps">
-    <div class="wrap">
-      <p class="label">Apps — 02</p>
-      <ul class="index">
-        <li><a href="kankan/" data-icon="assets/kankan.png">
-          <span class="no">S001</span><span class="name">칸칸</span><span class="what">오늘 들를 곳을 한 칸씩, 고양이랑 천천히 걷는 하루 동선 지도</span><span class="meta">iOS · Android</span><span class="meta yr">2026</span>
-        </a></li>
-        <li><a href="https://apps.apple.com/kr/app/%EB%85%B8%EC%A0%80%EC%A7%80%EB%A7%A8/id6820324609" data-icon="assets/nojudgeman.png">
-          <span class="no">S002</span><span class="name">노저지맨</span><span class="what">살까 말까 고민되는 물건을 ‘사’ / ‘사지마’로 정해 주는 익명 투표</span><span class="meta">iOS</span><span class="meta yr">2026</span>
-        </a></li>
-      </ul>
+  <!-- 1. 흰 화면: 칸칸 고양이 모양 물방울 안으로 앱 화면이 비친다 -->
+  <section class="intro" aria-label="SOYO">
+    <canvas id="blob" aria-hidden="true"></canvas>
+    <h1 class="visually-hidden">SOYO 소요</h1>
+  </section>
+
+  <!-- 2. 검은 화면: 입체 칸칸 고양이 둘레로 앱 화면 카드가 돈다 (스크롤로 회전) -->
+  <section class="orbit" id="orbit" aria-label="작업 화면">
+    <div class="orbit-stick">
+      <canvas id="scene" aria-hidden="true"></canvas>
     </div>
   </section>
 
-  <section id="about">
-    <div class="wrap">
-      <p class="label">About</p>
-      <p class="lead">소요(逍遙)는 ‘슬슬 거닐며 노닌다’는 뜻입니다. 서두르게 하지 않고, 점수 매기지 않고, 필요한 만큼만 묻는 앱을 만듭니다.</p>
-      <div class="rules">
-        <div><span class="no">01</span><b>회원가입 없이</b><p>이름도 연락처도 묻지 않습니다. 여는 순간 바로 씁니다.</p></div>
-        <div><span class="no">02</span><b>필요한 것만</b><p>기능에 꼭 필요한 정보만 다루고, 어디로 가는지 빠짐없이 적습니다.</p></div>
-        <div><span class="no">03</span><b>조급하지 않게</b><p>마감, 점수, 알림 폭탄 없이. 쓰는 사람의 속도에 맞춥니다.</p></div>
-      </div>
-    </div>
+  <!-- 3. 작업: 분류 탭 + 큰 이름 줄. 마우스를 올리면 그 작업 그림이 따라온다. 목록은 assets/works.js 에 -->
+  <section class="works" id="works" aria-labelledby="works-title">
+    <h2 id="works-title" class="works-title">작업</h2>
+    <div class="tabs" role="toolbar" aria-label="작업 분류"></div>
+    <ol class="app-list" aria-live="polite"></ol>
+    <img class="follow" alt="" aria-hidden="true">
   </section>
 
-  <section id="contact">
-    <div class="wrap">
-      <p class="label">Contact</p>
-      <a class="mail" href="mailto:contact@mysoyoor.com">contact@mysoyoor.com</a>
-      <dl class="facts">
-        <dt>상호</dt><dd>소요 (SOYO)</dd>
-        <dt>대표</dt><dd>조진석</dd>
-        <dt>사업자등록번호</dt><dd>443-13-03295</dd>
-        <dt>업태</dt><dd>정보통신업 · 미디어콘텐츠창작업</dd>
-        <dt>답장</dt><dd>영업일 기준 3일 안에</dd>
-      </dl>
-    </div>
+  <!-- 5. 연락 -->
+  <section class="contact" id="contact" aria-labelledby="contact-title">
+    <h2 id="contact-title" class="visually-hidden">연락</h2>
+    <a class="mail" href="mailto:contact@mysoyoor.com">contact@<br>mysoyoor.com</a>
+    <dl class="facts">
+      <dt>상호</dt><dd>소요 (SOYO)</dd>
+      <dt>대표</dt><dd>조진석</dd>
+      <dt>사업자등록번호</dt><dd>443-13-03295</dd>
+      <dt>업태</dt><dd>정보통신업, 미디어콘텐츠창작업</dd>
+    </dl>
   </section>
 </main>
 
-<footer><span>© 2026 SOYO</span><span><a href="kankan/privacy">칸칸 개인정보처리방침</a></span></footer>
-<pre id="tip" aria-hidden="true"></pre>
-<script src="assets/main.js" defer></script>
+<footer class="foot">
+  <span>© 2026 SOYO</span>
+  <a href="https://julie16520-spec.github.io/nojudgeman-legal/privacy">노저지맨 개인정보처리방침</a>
+</footer>
+
+<script src="assets/works.js"></script>
+<script type="module" src="assets/app.js"></script>
 </body>
 </html>
