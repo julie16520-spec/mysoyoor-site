@@ -6,11 +6,11 @@
 //   images: 첫 화면 더미에 쌓일 그림들 (assets/shots/ 안, 세로든 가로든 jpg)
 //   video:  (선택) 더미 카드에서 소리 없이 도는 짧은 영상 mp4
 window.SOYO_CATEGORIES = [
-  { id: "app", label: "앱" },
-  { id: "video", label: "영상" },
-  { id: "book", label: "출판" },
-  { id: "marketing", label: "마케팅" },
-  { id: "item", label: "아이템" },
+  { id: "app", label: "App" },
+  { id: "video", label: "Video" },
+  { id: "book", label: "Publishing" },
+  { id: "marketing", label: "Marketing" },
+  { id: "item", label: "Item" },
 ];
 
 window.SOYO_WORKS = [

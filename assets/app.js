@@ -33,7 +33,7 @@
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .2 });
 
   function render() {
-    filters.replaceChildren(btn("전체", null, works.length), ...cats.map(c => btn(c.label, c.id, count(c.id))));
+    filters.replaceChildren(btn("All", null, works.length), ...cats.map(c => btn(c.label, c.id, count(c.id))));
     list.replaceChildren(...works.filter(w => !filter || w.cat === filter).map((w, i) => {
       const li = document.createElement("li"), a = document.createElement("a");
       li.style.setProperty("--i", i);
