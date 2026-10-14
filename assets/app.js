@@ -17,7 +17,7 @@
   const boardEl = document.getElementById("board");
   const cv = boardEl.querySelector("canvas");
   const g = cv.getContext("2d");
-  let W, H, DPR, cell, cols, rows, ox, oy, cells, mines, raf = 0, start = 0, pressed = -1, boom = -1, visible = true;
+  let W, H, DPR, cell, cols, rows, ox, oy, cells, mines, textBox, raf = 0, start = 0, pressed = -1, hover = -1, boom = -1, visible = true;
 
   const idx = (x, y) => y * cols + x;
   const inside = (x, y) => x >= 0 && y >= 0 && x < cols && y < rows;
@@ -30,13 +30,14 @@
     const wide = W >= 640;
     // 글자 판: 넓으면 SOYO 한 줄(23칸), 좁으면 SO / YO 두 줄(11칸)
     const textW = wide ? 23 : 11, textH = wide ? 5 : 11;
-    cell = Math.floor(Math.min(W / (textW + 3), H / (textH + 6), 64));
-    cell = Math.max(cell, 22);
+    cell = Math.floor(Math.min((W * 0.76) / textW, (H * 0.6) / textH, 84));
+    cell = Math.max(cell, 20);
     cols = Math.ceil(W / cell) + 1; rows = Math.ceil(H / cell) + 1;
     ox = Math.floor((W - cols * cell) / 2); oy = Math.floor((H - rows * cell) / 2);
     // 지뢰 = 글자 칸
     mines = new Uint8Array(cols * rows);
     const gx = Math.floor((cols - textW) / 2), gy = Math.floor((rows - textH) / 2);
+    textBox = { x0: gx, y0: gy, x1: gx + textW - 1, y1: gy + textH - 1 };
     const place = (ch, px, py) => FONT[ch].forEach((r, y) => [...r].forEach((c, x) => { if (c === "#" && inside(px + x, py + y)) mines[idx(px + x, py + y)] = 1; }));
     if (wide) ["S", "O", "Y", "O"].forEach((ch, i) => place(ch, gx + i * 6, gy));
     else { place("S", gx, gy); place("O", gx + 6, gy); place("Y", gx, gy + 6); place("O", gx + 6, gy + 6); }
@@ -49,30 +50,24 @@
     plan();
   }
 
-  // 시간표: 칸이 위에서부터 깔림 → 가운데 아래쪽 빈 칸을 눌러 번져 열림 → 남은 안전 칸 열림 → 깃발
+  // 시간표: 칸이 위에서부터 깔림 → 글자 아래쪽 한 칸을 "눌러" 둘레 구역이 물결처럼 열림 → 지뢰 자리에 깃발
+  //  열리는 구역은 글자 둘레 타원 + 들쭉날쭉한 가장자리. 바깥은 덮인 채로 남아 한창 하던 판처럼 보인다
+  function inRegion(x, y) {
+    const cx = (textBox.x0 + textBox.x1) / 2, cy = (textBox.y0 + textBox.y1) / 2;
+    const rx = (textBox.x1 - textBox.x0) / 2 + 2.6, ry = (textBox.y1 - textBox.y0) / 2 + 2.2;
+    const wob = 0.18 * Math.sin(x * 1.9 + y * 0.7) + 0.12 * Math.cos(y * 2.3 - x * 1.1);
+    return ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 < 1 + wob;
+  }
   function plan() {
-    const T0 = 0, DROP = 420, CLICK = 650, STEP = 26;
-    cells.forEach((c) => { c.drop = T0 + c.y * (DROP / rows) + (c.x % 3) * 12; });
-    // 첫 클릭: 글자 아래쪽 가운데의 빈(0) 칸
-    let seed = cells.find((c) => !c.mine && c.n === 0 && c.y > rows * 0.72 && Math.abs(c.x - cols / 2) < 2) || cells.find((c) => !c.mine && c.n === 0);
-    const dist = new Map([[idx(seed.x, seed.y), 0]]);
-    const q = [seed];
-    while (q.length) {   // 진짜 지뢰찾기처럼: 0이면 이웃을 계속 연다
-      const c = q.shift(), d = dist.get(idx(c.x, c.y));
-      c.open = CLICK + d * STEP;
-      if (c.n !== 0) continue;
-      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
-        const nx = c.x + dx, ny = c.y + dy, k = idx(nx, ny);
-        if (!inside(nx, ny) || dist.has(k) || cells[k].mine) continue;
-        dist.set(k, d + 1); q.push(cells[k]);
-      }
-    }
-    let last = Math.max(...[...dist.values()]) * STEP + CLICK;
-    // 덜 열린 안전 칸(글자 사이 구멍 등)은 가까운 순서로 마저 연다
-    cells.filter((c) => !c.mine && c.open === Infinity).forEach((c, i) => { c.open = last + 60 + i * 18; });
-    last = Math.max(last, ...cells.filter((c) => !c.mine).map((c) => c.open));
-    // 깃발: 글자 순서대로 하나씩
-    cells.filter((c) => c.mine).sort((a, b) => a.x - b.x || a.y - b.y).forEach((c, i) => { c.flag = last + 180 + i * 22; });
+    const DROP = 420, CLICK = 640, STEP = 34;
+    cells.forEach((c) => { c.drop = c.y * (DROP / rows) + (c.x % 3) * 12; c.open = Infinity; c.flag = Infinity; });
+    const seed = { x: Math.round((textBox.x0 + textBox.x1) / 2), y: textBox.y1 + 2 };
+    cells.forEach((c) => {
+      if (c.mine || !inRegion(c.x, c.y)) return;
+      c.open = CLICK + Math.hypot(c.x - seed.x, (c.y - seed.y) * 1.15) * STEP;
+    });
+    const last = Math.max(...cells.filter((c) => c.open !== Infinity).map((c) => c.open));
+    cells.filter((c) => c.mine).sort((a, b) => a.x - b.x || a.y - b.y).forEach((c, i) => { c.flag = last + 200 + i * 24; });
     if (reduceMotion) cells.forEach((c) => { c.drop = -1; if (c.open !== Infinity) c.open = -1; if (c.flag !== Infinity) c.flag = -1; });
   }
 
@@ -89,11 +84,27 @@
     g.fillStyle = "#bdbdbd"; g.fillRect(px, py, s, s);
     g.fillStyle = "#7b7b7b"; g.fillRect(px, py, s, 1); g.fillRect(px, py, 1, s);
   }
+  const FLAG = [
+    "......##....",
+    "....####....",
+    "..######....",
+    "....####....",
+    "......##....",
+    ".......#....",
+    ".......#....",
+    ".....####...",
+    "...########.",
+  ];
   function flag(px, py, s, k) {
-    const u = s / 16, cx = px + s / 2;
-    g.save(); g.translate(cx, py + s * 0.82); g.scale(k, k); g.translate(-cx, -(py + s * 0.82));
-    g.fillStyle = "#000"; g.fillRect(cx - 4 * u, py + 11 * u, 8 * u, 2 * u); g.fillRect(cx - 2 * u, py + 10 * u, 4 * u, 1 * u); g.fillRect(cx, py + 4 * u, 1.2 * u, 7 * u);
-    g.fillStyle = "#e0251b"; g.beginPath(); g.moveTo(cx + 1.2 * u, py + 3 * u); g.lineTo(cx - 5 * u, py + 5.5 * u); g.lineTo(cx + 1.2 * u, py + 8 * u); g.fill();
+    const u = (s * 0.66) / 12;   // 칸 크기에 맞춰 (작은 화면에서도 깃발로 보이게)
+    const w = 12 * u, h = 9 * u, fx = Math.round(px + (s - w) / 2), fy = Math.round(py + (s - h) / 2);
+    g.save();
+    g.translate(px + s / 2, py + s * 0.78); g.scale(k, k); g.translate(-(px + s / 2), -(py + s * 0.78));
+    FLAG.forEach((row, y) => [...row].forEach((c, x) => {
+      if (c !== "#") return;
+      g.fillStyle = y <= 4 && x <= 7 ? "#e0251b" : "#000";
+      g.fillRect(fx + x * u, fy + y * u, u, u);
+    }));
     g.restore();
   }
   function mine(px, py, s) {
@@ -131,6 +142,7 @@
         if (c.n) { g.fillStyle = NUM[c.n]; g.fillText(String(c.n), px + cell / 2, py + cell / 2 + 1); }
       } else {
         tile(px, py, cell, i === pressed);
+        if (i === hover && i !== pressed) { g.fillStyle = "rgba(255,255,255,.22)"; g.fillRect(px, py, cell, cell); }
         const f = (t - c.flag) / 220;
         if (f >= 0) { const k = f < 1 ? 1 + Math.sin(f * Math.PI) * 0.35 : 1; if (f < 1) busy = true; flag(px, py, cell, Math.min(1, f * 3) * k); }
         else if (c.flag !== Infinity) busy = true;
@@ -149,21 +161,43 @@
     return inside(x, y) ? idx(x, y) : -1;
   };
   const coveredNow = (c) => c.mine || performance.now() - start < c.open;
+  boardEl.addEventListener("pointermove", (e) => {
+    if (e.pointerType !== "mouse") return;
+    const k = cellAt(e);
+    const h = k >= 0 && coveredNow(cells[k]) ? k : -1;
+    if (h !== hover) { hover = h; kick(); }
+  });
   boardEl.addEventListener("pointerdown", (e) => {
     const k = cellAt(e);
     if (k >= 0 && coveredNow(cells[k])) { pressed = k; kick(); }
   });
-  boardEl.addEventListener("pointerleave", () => { if (pressed >= 0) { pressed = -1; kick(); } });
+  boardEl.addEventListener("pointerleave", () => { hover = -1; pressed = -1; kick(); });
   boardEl.addEventListener("pointerup", (e) => {
     const k = cellAt(e);
     pressed = -1;
-    if (k >= 0 && cells[k].mine) {   // 깃발 칸: 지뢰가 잠깐 터지고 돌아온다
+    if (k < 0) return kick();
+    const c = cells[k], now = performance.now() - start;
+    if (c.mine) {   // 깃발 칸: 지뢰가 잠깐 터지고 돌아온다
       boom = k; kick();
       setTimeout(() => { boom = -1; kick(); }, 900);
       return;
     }
+    if (now >= c.open) return kick();
+    // 진짜 지뢰찾기처럼: 0 이면 이웃까지 번져 연다
+    const q = [c], seen = new Set([k]);
+    c.open = now;
+    while (q.length) {
+      const d = q.shift();
+      if (d.n !== 0) continue;
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+        const nx = d.x + dx, ny = d.y + dy, nk = idx(nx, ny);
+        if (!inside(nx, ny) || seen.has(nk) || cells[nk].mine || now >= cells[nk].open) continue;
+        seen.add(nk);
+        cells[nk].open = now + Math.hypot(nx - c.x, ny - c.y) * 30;
+        q.push(cells[nk]);
+      }
+    }
     kick();
-    document.getElementById("works").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
   });
 
   function replay() {
@@ -216,12 +250,16 @@
       if (/^https?:/.test(a.getAttribute("href"))) { a.target = "_blank"; a.rel = "noopener"; }
       if (w.shot) a.dataset.shot = w.shot;
       if (w.video) a.dataset.video = w.video;
-      const img = document.createElement("img");
-      img.className = "thumb"; img.alt = ""; img.loading = "lazy"; if (w.thumb || w.shot) img.src = w.thumb || w.shot;
+      const txt = document.createElement("span"); txt.className = "txt";
       const name = document.createElement("span"); name.className = "name"; name.textContent = w.name;
+      const row2 = document.createElement("span"); row2.className = "row2";
       const kind = document.createElement("span"); kind.className = "kind"; kind.textContent = label[w.cat] || "";
-      const meta = document.createElement("span"); meta.className = "meta"; meta.innerText = w.meta || "";
-      a.append(img, name, kind, meta);
+      const meta = document.createElement("span"); meta.textContent = (w.meta || "").replace(/\n/g, ", ");
+      row2.append(kind, meta); txt.append(name, row2);
+      const pic = document.createElement("span"); pic.className = "pic";
+      if (w.video) { const v = document.createElement("video"); v.src = w.video; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = !reduceMotion; pic.append(v); }
+      else if (w.shot) { const img = document.createElement("img"); img.src = w.shot; img.alt = w.name; img.loading = "lazy"; pic.append(img); }
+      a.append(txt, pic);
       li.append(a); list.append(li);
     });
     tabs.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.cat === cat)));
@@ -232,38 +270,11 @@
       const b = document.createElement("button");
       b.type = "button"; b.dataset.cat = c.id;
       b.innerHTML = `${c.label}<sup>${n}</sup>`;
+      if (n === 0) b.disabled = true;   // 아직 없는 분류는 비워 둔다
       b.addEventListener("click", () => render(c.id));
       tabs.append(b);
     });
     render("all");
   }
 
-  // 줄에 마우스를 올리면 그 작업 그림(또는 영상)이 따라온다
-  const follow = document.querySelector(".follow");
-  if (follow && list && !reduceMotion) {
-    const vid = document.createElement("video");
-    vid.className = "follow"; vid.muted = true; vid.loop = true; vid.playsInline = true; vid.setAttribute("aria-hidden", "true");
-    follow.after(vid);
-    let x = 0, y = 0, fx = 0, fy = 0, cur = null;
-    list.addEventListener("pointerover", (e) => {
-      const a = e.target.closest("a");
-      if (!a || e.pointerType !== "mouse" || (cur && a.contains(e.relatedTarget))) return;
-      if (a.dataset.video) { cur = vid; vid.src = a.dataset.video; vid.play().catch(() => {}); }
-      else if (a.dataset.shot) { cur = follow; follow.src = a.dataset.shot; }
-      else return;
-      cur.classList.add("on"); fx = x = e.clientX; fy = y = e.clientY;
-    });
-    list.addEventListener("pointerout", (e) => {
-      const a = e.target.closest("a");
-      if (a && !a.contains(e.relatedTarget)) { follow.classList.remove("on"); vid.classList.remove("on"); vid.pause(); cur = null; }
-    });
-    list.addEventListener("pointermove", (e) => { x = e.clientX; y = e.clientY; });
-    const loop = () => {
-      requestAnimationFrame(loop);
-      if (!cur) return;
-      fx += (x - fx) * 0.14; fy += (y - fy) * 0.14;
-      cur.style.transform = `translate3d(${fx + 28}px, ${fy - 230}px, 0) rotate(${Math.max(-10, Math.min(10, (x - fx) * 0.25))}deg)`;
-    };
-    requestAnimationFrame(loop);
-  }
 })();
