@@ -1,9 +1,9 @@
 @font-face { font-family: "Plex Mono"; src: url("fonts/plex-mono-500.woff2") format("woff2"); font-weight: 500; font-display: swap; }
 
 :root {
-  --bg: #0c0c0b;
-  --ink: #e9e4da;
-  --warm: #e9762b;
+  --bg: #f5f5f2;
+  --ink: #141413;
+  --warm: #e0531f;
   --dim: color-mix(in srgb, var(--ink) 45%, transparent);
   --line: color-mix(in srgb, var(--ink) 16%, transparent);
   --sans: "Pretendard Variable", Pretendard, "Helvetica Neue", Arial, sans-serif;
@@ -12,7 +12,7 @@
   --ease: cubic-bezier(.2, .7, .1, 1);
   /* 층: 미리보기 그림 < 인쇄 그레인 */
   --z-peek: 5; --z-grain: 30;
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 * { box-sizing: border-box; }
