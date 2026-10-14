@@ -56,6 +56,7 @@ if (blobCanvas) {
         f += ball(q, vec2(0.38 * cos(t * .23), 0.32 * sin(t * .31)) , 0.05);
         f += ball(q, vec2(-0.36 * sin(t * .19), -0.3 * cos(t * .27)), 0.04);
         f += ball(q, (uMouse - uCenter) / g, 0.035);
+        f = min(f, 4.0);   // 방울 한가운데서 값이 튀어 점이 생기지 않게
         float aa = fwidth(f) * 1.2;
         float inside = smoothstep(1.0 - aa, 1.0 + aa, f);
         vec3 col = mix(uPaper, uInk, inside);
