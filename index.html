@@ -3,79 +3,77 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>소요 SOYO — 작고 다정한 앱을 만듭니다</title>
-<meta name="description" content="소요(SOYO)는 일상을 조금 덜 바쁘게 만드는 작은 모바일 앱과 디지털 콘텐츠를 만듭니다. 칸칸, 노저지맨.">
-<meta property="og:title" content="소요 SOYO">
-<meta property="og:description" content="일상을 조금 덜 바쁘게 만드는 작은 앱을 만듭니다.">
+<title>SOYO 소요 — 작고 다정한 앱을 만듭니다</title>
+<meta name="description" content="소요(SOYO)는 일상을 조금 덜 바쁘게 만드는 작은 모바일 앱을 만드는 스튜디오입니다. 칸칸, 노저지맨.">
+<meta property="og:title" content="SOYO 소요">
+<meta property="og:description" content="작고 다정한 앱을 만듭니다.">
 <link rel="icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
-<header>
-  <div class="wrap">
-    <a class="logo" href="./">SOYO 소요</a>
-    <nav><a href="#apps">앱</a><a href="#about">소개</a><a href="#contact">연락처</a></nav>
+<nav class="top">
+  <a href="./">SOYO</a>
+  <a href="#apps">Apps</a>
+  <a href="#about">About</a>
+  <span class="grow"></span>
+  <a href="#contact">Contact</a>
+</nav>
+
+<header class="hero" aria-label="소요">
+  <pre id="cat" aria-hidden="true"></pre>
+  <div class="cap">
+    <b>소요 — 작고 다정한 앱을 만듭니다</b>
+    <span>Small, gentle apps · Korea · Est. 2026</span>
   </div>
 </header>
 
 <main>
-  <div class="wrap hero">
-    <h1>작고 다정한 앱을<br>만듭니다.</h1>
-    <p>소요(SOYO)는 일상을 조금 덜 바쁘게 만드는 모바일 앱과 디지털 콘텐츠를 만드는 작은 스튜디오입니다. 서두르게 하지 않고, 점수 매기지 않고, 필요한 만큼만 묻는 앱을 지향합니다.</p>
-  </div>
-
   <section id="apps">
     <div class="wrap">
-      <h2>앱</h2>
-      <div class="apps">
-        <article class="app">
-          <img src="assets/kankan.png" alt="칸칸 앱 아이콘: 지도 위 깃발 칸에 선 회색 고양이">
-          <h3>칸칸 <span class="tag">출시 준비 중</span></h3>
-          <p>오늘 들를 곳을 지도에 한 칸씩 담고, 고양이랑 천천히 따라 걷는 하루 동선 지도. 걸어가는 길을 따라오고, 들른 곳은 조용히 표시해 둡니다.</p>
-          <div class="links"><a href="kankan/">자세히</a><a href="kankan/privacy">개인정보처리방침</a></div>
-        </article>
-        <article class="app">
-          <img src="assets/nojudgeman.png" alt="노저지맨 앱 아이콘">
-          <h3>노저지맨</h3>
-          <p>살까 말까 고민되는 물건을 올리면 사람들이 ‘사’ / ‘사지마’로 정해 주는 익명 투표 앱. 회원가입 없이 바로 씁니다.</p>
-          <div class="links">
-            <a href="https://apps.apple.com/kr/app/%EB%85%B8%EC%A0%80%EC%A7%80%EB%A7%A8/id6820324609">App Store</a>
-            <a href="https://julie16520-spec.github.io/nojudgeman-legal/privacy">개인정보처리방침</a>
-            <a href="https://julie16520-spec.github.io/nojudgeman-legal/terms">이용약관</a>
-          </div>
-        </article>
-      </div>
+      <p class="label">Apps — 02</p>
+      <ul class="index">
+        <li><a href="kankan/" data-icon="assets/kankan.png">
+          <span class="no">S001</span><span class="name">칸칸</span><span class="what">오늘 들를 곳을 한 칸씩, 고양이랑 천천히 걷는 하루 동선 지도</span><span class="meta">iOS · Android</span><span class="meta yr">2026</span>
+        </a></li>
+        <li><a href="https://apps.apple.com/kr/app/%EB%85%B8%EC%A0%80%EC%A7%80%EB%A7%A8/id6820324609" data-icon="assets/nojudgeman.png">
+          <span class="no">S002</span><span class="name">노저지맨</span><span class="what">살까 말까 고민되는 물건을 ‘사’ / ‘사지마’로 정해 주는 익명 투표</span><span class="meta">iOS</span><span class="meta yr">2026</span>
+        </a></li>
+      </ul>
     </div>
   </section>
 
   <section id="about">
     <div class="wrap">
-      <h2>만드는 방식</h2>
-      <div class="values">
-        <div><b>회원가입 없이</b><p>이름도, 연락처도 묻지 않습니다. 앱을 여는 순간 바로 쓸 수 있게 만듭니다.</p></div>
-        <div><b>필요한 것만</b><p>기능에 꼭 필요한 정보만 다루고, 어디로 가는지 개인정보처리방침에 빠짐없이 적습니다.</p></div>
-        <div><b>조급하지 않게</b><p>마감, 점수, 알림 폭탄 없이. 쓰는 사람의 속도에 맞춥니다.</p></div>
+      <p class="label">About</p>
+      <p class="lead">소요(逍遙)는 ‘슬슬 거닐며 노닌다’는 뜻입니다. 서두르게 하지 않고, 점수 매기지 않고, 필요한 만큼만 묻는 앱을 만듭니다.</p>
+      <div class="rules">
+        <div><span class="no">01</span><b>회원가입 없이</b><p>이름도 연락처도 묻지 않습니다. 여는 순간 바로 씁니다.</p></div>
+        <div><span class="no">02</span><b>필요한 것만</b><p>기능에 꼭 필요한 정보만 다루고, 어디로 가는지 빠짐없이 적습니다.</p></div>
+        <div><span class="no">03</span><b>조급하지 않게</b><p>마감, 점수, 알림 폭탄 없이. 쓰는 사람의 속도에 맞춥니다.</p></div>
       </div>
     </div>
   </section>
 
   <section id="contact">
     <div class="wrap">
-      <h2>연락처</h2>
-      <div class="contact">
-        <dl>
-          <dt>문의</dt><dd><a href="mailto:contact@mysoyoor.com">contact@mysoyoor.com</a></dd>
-          <dt>상호</dt><dd>소요 (SOYO)</dd>
-          <dt>대표</dt><dd>조진석</dd>
-          <dt>사업자등록번호</dt><dd>443-13-03295</dd>
-          <dt>업태</dt><dd>정보통신업 · 미디어콘텐츠창작업</dd>
-        </dl>
-        <p style="margin:14px 0 0;color:var(--body);font-size:15px">앱 사용 중 불편한 점이나 제안은 메일로 보내 주세요. 영업일 기준 3일 안에 답장드립니다.</p>
-      </div>
+      <p class="label">Contact</p>
+      <a class="mail" href="mailto:contact@mysoyoor.com">contact@mysoyoor.com</a>
+      <dl class="facts">
+        <dt>상호</dt><dd>소요 (SOYO)</dd>
+        <dt>대표</dt><dd>조진석</dd>
+        <dt>사업자등록번호</dt><dd>443-13-03295</dd>
+        <dt>업태</dt><dd>정보통신업 · 미디어콘텐츠창작업</dd>
+        <dt>답장</dt><dd>영업일 기준 3일 안에</dd>
+      </dl>
     </div>
   </section>
 </main>
 
-<footer><div class="wrap">© 2026 소요 SOYO. All rights reserved.</div></footer>
+<footer><span>© 2026 SOYO</span><span><a href="kankan/privacy">칸칸 개인정보처리방침</a></span></footer>
+<pre id="tip" aria-hidden="true"></pre>
+<script src="assets/main.js" defer></script>
 </body>
 </html>
