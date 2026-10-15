@@ -84,6 +84,7 @@ body:not(.is-work) #work { display: none; }
 /* 바닥 */
 .foot { padding: 0 0 var(--pad); }
 .foot dl { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; margin: 0; padding: 0 var(--pad); }
+.foot dl .addr { grid-column: 1 / -1; }
 .foot dt { opacity: .45; }
 .foot dd { margin: 0; }
 .foot .rule { margin-top: 28px; justify-content: flex-end; }
