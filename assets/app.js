@@ -40,7 +40,9 @@
       const rows = ws.map(w => row(w, i++));
       if (!name) return rows;
       const h = document.createElement("li");
-      h.className = "sub"; h.append(name, sup(ws.length));
+      // 숫자는 분류 이름(App 등)에만. Film, Music Video… 같은 소분류엔 안 붙인다
+      h.className = "sub"; h.append(name);
+      if (cats.some(c => c.label === name)) h.append(sup(ws.length));
       return [h, ...rows];
     }));
   }
