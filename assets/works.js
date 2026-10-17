@@ -1,11 +1,11 @@
 // 소요 작업 목록. 새 작업은 WORKS 에 한 덩어리씩 더한다.
 //   cat:    "app" | "video" | "book" | "marketing" | "item"
 //   sub:    Video 안 묶음 "film" | "mv" | "ad" | "content" | "personal"
-//   year:   연도
+//   year:   연도. 모르면 빼둔다 (— 로 보이고 목록 아래로)
 //   href:   누르면 갈 곳. 없으면 눌리지 않는 줄 (아직 안 낸 작업)
 //   icon:   줄에 마우스를 올리면 커서 옆에 뜨는 그림 (앱은 assets/icons/, 그 밖엔 assets/works/<slug>/thumb.jpg)
 //   name:   큰 제목. 한국어가 원제면 한국어로 ("여진"), 아니면 영어
-//   alt:    옆에 흐리게 붙는 다른 말 제목 ("Yeojin" / "여진")
+//   alt:    옆에 흐리게 붙는 다른 말 제목 ("Milk Tooth", 아티스트·광고주 이름)
 //   role:   맡은 일. 오른쪽 칸에 (없으면 분류 이름)
 //   video:  사이트 안 창에서 재생할 mp4. poster 는 재생 전 첫 화면
 //   images: 영상 없을 때 창에 세로로 보여줄 썸네일·스크린샷들
@@ -37,4 +37,35 @@ window.SOYO_WORKS = [
   },
   { cat: "app", name: "KanKan", year: 2026, icon: "/assets/icons/kankan.png" },
   { cat: "video", sub: "ad", name: "Filluv", year: 2023, role: "Assistant Camera" },
+
+  // Film
+  { cat: "video", sub: "film", name: "여진", alt: "Milk Tooth", year: 2023, role: "Director" },
+  { cat: "video", sub: "film", name: "하류", role: "Director" },
+  { cat: "video", sub: "film", name: "귀객", role: "Director" },
+  { cat: "video", sub: "film", name: "하루살이", role: "Director" },
+  { cat: "video", sub: "film", name: "유흥소녀", role: "Directing Dept." },
+  { cat: "video", sub: "film", name: "안티러브", role: "Director" },
+  { cat: "video", sub: "film", name: "THE WHITE LOOP", alt: "CKAIFF Official Selection", role: "Director" },
+
+  // Music Video
+  { cat: "video", sub: "mv", name: "영원", alt: "이희상", role: "P.A" },
+  { cat: "video", sub: "mv", name: "Don't Stop", alt: "Hypnosistherapy", role: "P.A / Stills" },
+  { cat: "video", sub: "mv", name: "BLAZE", alt: "Hypnosistherapy", role: "P.A" },
+  { cat: "video", sub: "mv", name: "Go", alt: "트랜스 픽션", role: "Assistant Director" },
+  { cat: "video", sub: "mv", name: "Radio", alt: "트랜스 픽션", role: "Assistant Director" },
+  { cat: "video", sub: "mv", name: "rabbit hole", alt: "toasterforaswim", role: "Animation Director" },
+
+  // Commercial
+  { cat: "video", sub: "ad", name: "조지아 추성훈편", alt: "Coca-Cola Korea", role: "Editor" },
+  { cat: "video", sub: "ad", name: "평생을 함께하는 이", alt: "이마트", role: "2D Animation" },
+
+  // Content
+  { cat: "video", sub: "content", name: "T라 능숙해", alt: "TXT · Ep.1–7", role: "Assistant Director · Logo · Edit · Color · Sound" },
+
+  // Personal
+  { cat: "video", sub: "personal", name: "봄날은 간다", alt: "밍기뉴", role: "Director · DoP · Editor" },
+  { cat: "video", sub: "personal", name: "Synchronicity", alt: "최성", role: "Director · DoP · Editor" },
+  { cat: "video", sub: "personal", name: "Year to Year", alt: "예지, 오혁", role: "Director · DoP · Editor" },
+  { cat: "video", sub: "personal", name: "몽중궤적", alt: "夢中軌跡", role: "Director · Editor" },
+  { cat: "video", sub: "personal", name: "1340の先", role: "Animation Director · Editor" },
 ];

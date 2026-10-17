@@ -1,6 +1,7 @@
 // 분류 링크, 작업 목록, 미리보기 그림.
 (() => {
-  const works = (window.SOYO_WORKS || []).slice().sort((a, b) => b.year - a.year);
+  // 최신 연도가 위. 연도 아직 없는 작업은 아래에 적힌 차례대로
+  const works = (window.SOYO_WORKS || []).slice().sort((a, b) => (b.year || 0) - (a.year || 0));
   const cats = window.SOYO_CATEGORIES || [];
   const label = Object.fromEntries(cats.map(c => [c.id, c.label]));
   const count = id => works.filter(w => w.cat === id).length;
@@ -63,7 +64,7 @@
     if (w.href) { a.href = w.href; a.target = "_blank"; a.rel = "noopener"; }
     else if (opens) { a.type = "button"; a.onclick = () => view(w); }
     a.innerHTML = `<span class="y"></span><span class="n"></span><span class="t"></span><span class="go" aria-hidden="true">${opens && !w.href ? "+" : "↗"}</span>`;
-    a.querySelector(".y").textContent = w.year;
+    a.querySelector(".y").textContent = w.year || "—";
     named(a.querySelector(".n"), w);
     a.querySelector(".t").textContent = w.role || label[w.cat] || "";
     // 이름 글자 위에 있을 때만 커서를 따라다니는 그림. 앱은 둥근 아이콘, 그 밖엔 가로 썸네일
@@ -82,7 +83,7 @@
   const box = document.querySelector(".view");
   function view(w) {
     peek.classList.remove("on");
-    box.querySelector(".vmeta").textContent = `${w.year} · ${w.role || label[w.cat] || ""}`;
+    box.querySelector(".vmeta").textContent = `${w.year || "—"} · ${w.role || label[w.cat] || ""}`;
     const h = box.querySelector(".vname");
     named(h, w);
     const media = [];
