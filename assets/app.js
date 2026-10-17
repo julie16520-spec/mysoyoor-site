@@ -31,11 +31,12 @@
     title.replaceChildren(filter ? label[filter] : "Work", sup(filter ? count(filter) : works.length));
     catLinks.querySelectorAll("a").forEach(a => a.toggleAttribute("aria-current", a.dataset.cat === filter));
     const shown = works.filter(w => !filter || w.cat === filter);
-    // 소분류가 있는 분류(Video)는 Film, Music Video… 묶음마다 작은 제목을 달고 그 아래 줄들. 빈 묶음은 안 보임
-    const subs = filter && window.SOYO_SUBS?.[filter];
-    const groups = subs
-      ? subs.map(s => [s.label, shown.filter(w => w.sub === s.id)]).concat([[null, shown.filter(w => !subs.some(s => s.id === w.sub))]])
-      : [[null, shown]];
+    // 묶음마다 작은 제목: 분류 차례대로, 소분류가 있는 분류(Video)는 Film, Music Video… 로 더 나눈다. 빈 묶음은 안 보임
+    const groups = cats.flatMap(c => {
+      const ws = shown.filter(w => w.cat === c.id), subs = window.SOYO_SUBS?.[c.id];
+      if (!subs) return [[filter ? null : c.label, ws]]; // App 만 볼 땐 위 제목과 겹치니 소제목 없이
+      return subs.map(s => [s.label, ws.filter(w => w.sub === s.id)]).concat([[c.label, ws.filter(w => !subs.some(s => s.id === w.sub))]]);
+    });
     let i = 0;
     list.replaceChildren(...groups.filter(([, ws]) => ws.length).flatMap(([name, ws]) => {
       const rows = ws.map(w => row(w, i++));
