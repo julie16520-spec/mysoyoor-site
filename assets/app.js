@@ -29,27 +29,82 @@
     // 목록 제목은 지금 보는 분류. 빈 분류는 빈 목록
     title.replaceChildren(filter ? label[filter] : "Work", sup(filter ? count(filter) : works.length));
     catLinks.querySelectorAll("a").forEach(a => a.toggleAttribute("aria-current", a.dataset.cat === filter));
-    list.replaceChildren(...works.filter(w => !filter || w.cat === filter).map((w, i) => {
-      // href 가 없는 작업(아직 안 낸 것)은 눌리지 않는 줄
-      const li = document.createElement("li"), a = document.createElement(w.href ? "a" : "div");
-      li.style.setProperty("--i", i);
-      if (w.href) { a.href = w.href; a.target = "_blank"; a.rel = "noopener"; }
-      a.innerHTML = `<span class="y"></span><span class="n"></span><span class="t"></span><span class="go" aria-hidden="true">↗</span>`;
-      a.querySelector(".y").textContent = w.year;
-      a.querySelector(".n").textContent = w.name;
-      a.querySelector(".t").textContent = label[w.cat] || "";
-      // 이름 글자 위에 있을 때만 커서를 따라다니는 아이콘
-      const n = a.querySelector(".n");
-      n.onpointerenter = () => { if (w.icon) { peek.src = w.icon; peek.classList.add("on"); } };
-      n.onpointermove = e => {
-        peek.style.setProperty("--x", e.clientX + 24 + "px");
-        peek.style.setProperty("--y", e.clientY - peek.offsetHeight / 2 + "px");
-      };
-      n.onpointerleave = () => peek.classList.remove("on");
-      li.append(a); io.observe(li);
-      return li;
+    const shown = works.filter(w => !filter || w.cat === filter);
+    // 소분류가 있는 분류(Video)는 Film, Music Video… 묶음마다 작은 제목을 달고 그 아래 줄들. 빈 묶음은 안 보임
+    const subs = filter && window.SOYO_SUBS?.[filter];
+    const groups = subs
+      ? subs.map(s => [s.label, shown.filter(w => w.sub === s.id)]).concat([[null, shown.filter(w => !subs.some(s => s.id === w.sub))]])
+      : [[null, shown]];
+    let i = 0;
+    list.replaceChildren(...groups.filter(([, ws]) => ws.length).flatMap(([name, ws]) => {
+      const rows = ws.map(w => row(w, i++));
+      if (!name) return rows;
+      const h = document.createElement("li");
+      h.className = "sub"; h.append(name, sup(ws.length));
+      return [h, ...rows];
     }));
   }
+
+  // 큰 제목 + 옆에 흐린 다른 말 제목. 한글이 섞이면 lang="ko" 로 읽히게
+  const ko = t => /[\uac00-\ud7a3]/.test(t) ? "ko" : "";
+  function named(el, w) {
+    el.textContent = w.name; if (ko(w.name)) el.lang = "ko";
+    if (!w.alt) return;
+    const k = document.createElement("span");
+    k.className = "alt"; k.textContent = w.alt; if (ko(w.alt)) k.lang = "ko";
+    el.append(k);
+  }
+
+  function row(w, i) {
+    // href 는 새 탭, 영상·그림이 있으면 사이트 안 창, 둘 다 없으면 눌리지 않는 줄
+    const opens = w.video || w.images?.length;
+    const li = document.createElement("li"), a = document.createElement(w.href ? "a" : opens ? "button" : "div");
+    li.style.setProperty("--i", i);
+    if (w.href) { a.href = w.href; a.target = "_blank"; a.rel = "noopener"; }
+    else if (opens) { a.type = "button"; a.onclick = () => view(w); }
+    a.innerHTML = `<span class="y"></span><span class="n"></span><span class="t"></span><span class="go" aria-hidden="true">${opens && !w.href ? "+" : "↗"}</span>`;
+    a.querySelector(".y").textContent = w.year;
+    named(a.querySelector(".n"), w);
+    a.querySelector(".t").textContent = w.role || label[w.cat] || "";
+    // 이름 글자 위에 있을 때만 커서를 따라다니는 그림. 앱은 둥근 아이콘, 그 밖엔 가로 썸네일
+    const n = a.querySelector(".n");
+    n.onpointerenter = () => { if (w.icon) { peek.src = w.icon; peek.classList.toggle("wide", w.cat !== "app"); peek.classList.add("on"); } };
+    n.onpointermove = e => {
+      peek.style.setProperty("--x", e.clientX + 24 + "px");
+      peek.style.setProperty("--y", e.clientY - peek.offsetHeight / 2 + "px");
+    };
+    n.onpointerleave = () => peek.classList.remove("on");
+    li.append(a); io.observe(li);
+    return li;
+  }
+
+  // 사이트 안 창: 영상이면 재생, 아니면 그림을 세로로. 닫으면 비워서 영상도 멈춘다
+  const box = document.querySelector(".view");
+  function view(w) {
+    peek.classList.remove("on");
+    box.querySelector(".vmeta").textContent = `${w.year} · ${w.role || label[w.cat] || ""}`;
+    const h = box.querySelector(".vname");
+    named(h, w);
+    const media = [];
+    if (w.video) {
+      const v = document.createElement("video");
+      Object.assign(v, { src: w.video, controls: true, playsInline: true, preload: "metadata" });
+      if (w.poster) v.poster = w.poster;
+      media.push(v);
+    }
+    for (const src of w.images || []) {
+      const img = document.createElement("img");
+      Object.assign(img, { src, alt: "", loading: "lazy", decoding: "async" });
+      media.push(img);
+    }
+    box.querySelector(".vbody").replaceChildren(...media);
+    box.showModal();
+    box.scrollTop = 0;
+  }
+  box.querySelector(".vclose").onclick = () => box.close();
+  box.onclick = e => { if (e.target === box) box.close(); };
+  box.onclose = () => box.querySelector(".vbody").replaceChildren();
+
   render();
 
   // /work 면 큰 SOYO 를 걷고 목록만 새 화면으로. 그 밖엔 첫 화면.

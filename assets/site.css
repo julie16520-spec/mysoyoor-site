@@ -30,7 +30,7 @@ ul, ol { list-style: none; margin: 0; padding: 0; }
 .skip:focus { top: 12px; }
 
 /* 작은 글씨: 고정폭, 대문자, 넓은 자간 */
-.top, .rule, .head, .list .y, .list .t, .foot { font-family: var(--mono); font-size: 10.5px; letter-spacing: .18em; text-transform: uppercase; line-height: 1.75; }
+.top, .rule, .head, .list .y, .list .t, .list .sub, .foot, .vbar { font-family: var(--mono); font-size: 10.5px; letter-spacing: .18em; text-transform: uppercase; line-height: 1.75; }
 
 /* 밑줄이 왼쪽에서 그어지는 링크 */
 .top a, .rule a, .up, .foot a {
@@ -68,18 +68,39 @@ body:not(.is-work) #work { display: none; }
 .head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 12px 32px;
   padding-bottom: 14px; border-bottom: .5px solid var(--line); }
 .head h2 { margin: 0; font: inherit; }
-.list a, .list div { display: grid; grid-template-columns: 9ch minmax(0, 1fr) 10ch 2ch; align-items: baseline; gap: 16px;
+.list button { width: 100%; background: none; border: 0; border-radius: 0; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.list a, .list div, .list button { display: grid; grid-template-columns: 9ch minmax(0, 1fr) 20ch 2ch; align-items: baseline; gap: 16px;
   padding: clamp(14px, 1.8vw, 22px) 0; border-bottom: .5px solid var(--line); }
 .list .n { justify-self: start; font: 700 clamp(30px, 5.6vw, 84px)/1 var(--sans); letter-spacing: -.035em; transition: color .3s var(--ease), transform .45s var(--ease); }
 .list .y, .list .t { opacity: .45; }
+.list .t { justify-self: end; text-align: right; }
+.alt { font-weight: 500; font-size: .42em; letter-spacing: 0; opacity: .45; margin-left: .6em; vertical-align: .35em; white-space: nowrap; }
 .list .go { font-family: var(--mono); opacity: 0; transform: translate(-6px, 6px); transition: opacity .3s, transform .45s var(--ease); justify-self: end; }
-.list .n:hover, .list a:focus-visible .n { color: var(--warm); transform: translateX(10px); }
-.list a:hover .go, .list a:focus-visible .go { opacity: 1; transform: none; }
+.list .n:hover, .list a:focus-visible .n, .list button:focus-visible .n { color: var(--warm); transform: translateX(10px); }
+.list a:hover .go, .list a:focus-visible .go, .list button:hover .go, .list button:focus-visible .go { opacity: 1; transform: none; }
 .list li { opacity: 0; transform: translateY(16px); transition: opacity .7s var(--ease), transform .7s var(--ease); transition-delay: calc(var(--i, 0) * 60ms); }
 .list li.in { opacity: 1; transform: none; }
+.list li.sub { opacity: 1; transform: none; padding: clamp(40px, 5vw, 72px) 0 10px; border-bottom: .5px solid var(--line); }
+.list li.sub:first-child { padding-top: clamp(20px, 2.4vw, 32px); }
+.list .sub sup { font-size: 8px; margin-left: 3px; letter-spacing: .1em; }
 .peek { position: fixed; z-index: var(--z-peek); left: 0; top: 0; width: clamp(120px, 11vw, 168px); aspect-ratio: 1; object-fit: cover;
   pointer-events: none; opacity: 0; border-radius: 22.5%; transform: translate(var(--x, 0), var(--y, 0)) scale(.92); transition: opacity .25s ease, scale .4s var(--ease); }
 .peek.on { opacity: 1; scale: 1.087; }
+.peek.wide { width: clamp(200px, 20vw, 320px); aspect-ratio: 16 / 9; border-radius: 2px; }
+
+/* 사이트 안 작업 창: 화면 전체를 덮는 같은 바탕, 영상·그림만 */
+.view { width: 100%; max-width: none; height: 100dvh; max-height: none; margin: 0; padding: 0 var(--pad) var(--pad); border: 0;
+  background: var(--bg); color: var(--ink); overflow-y: auto; overscroll-behavior: contain; }
+.view::backdrop { background: var(--bg); }
+html:has(.view[open]) { overflow: hidden; }
+.vbar { position: sticky; top: 0; z-index: 1; display: flex; justify-content: space-between; gap: 16px; padding: var(--pad) 0 12px; background: var(--bg); border-bottom: .5px solid var(--line); }
+.vbar .vmeta { opacity: .45; }
+.vclose { opacity: .78; background: none; border: 0; padding: 0; color: inherit; font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; }
+.vclose:hover { opacity: 1; color: var(--warm); }
+.vname { margin: clamp(24px, 4vw, 56px) 0 clamp(20px, 3vw, 40px); font: 700 clamp(30px, 5.6vw, 84px)/1 var(--sans); letter-spacing: -.035em; }
+.vbody { display: grid; gap: clamp(12px, 1.6vw, 24px); max-width: 1400px; }
+.vbody video, .vbody img { display: block; width: 100%; height: auto; max-height: 82dvh; object-fit: contain; background: var(--ink); }
+.vbody img { background: none; }
 
 /* 바닥 */
 .foot { padding: 0 0 var(--pad); }
@@ -93,7 +114,7 @@ body:not(.is-work) #work { display: none; }
   .hwf { height: 72svh; }
   .top { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); row-gap: 18px; }
   .brand, .top .col:last-child { grid-column: 1 / -1; }
-  .list a { grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; }
+  .list a, .list div, .list button { grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; }
   .list .y { grid-column: 1; grid-row: 1; }
   .list .t { grid-column: 2; grid-row: 1; justify-self: end; }
   .list .n { grid-column: 1 / -1; }
