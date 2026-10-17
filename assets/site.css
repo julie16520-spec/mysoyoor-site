@@ -49,7 +49,6 @@ a[href^="mailto"] { text-transform: none; letter-spacing: .06em; }
 .brand sup { font-size: .8em; }
 .brand span, .col h2 { opacity: .45; }
 .col h2 { margin: 0; font: inherit; }
-.col h2 a { opacity: 1; }
 .cats sup, .head sup { font-size: 8px; margin-left: 3px; letter-spacing: .1em; }
 .rule { display: flex; justify-content: space-between; align-items: center; gap: 16px;
   margin: clamp(18px, 2.6vw, 30px) var(--pad) 0; padding-top: 12px; border-top: .5px solid var(--line); }

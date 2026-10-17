@@ -17,8 +17,6 @@
     a.onclick = () => { filter = c.id; render(); };
     li.append(a); return li;
   }));
-  const workLink = document.querySelector(".col .all");
-  workLink.onclick = () => { filter = null; render(); };
   const title = document.querySelector(".head h2");
 
   const list = document.querySelector(".list");
