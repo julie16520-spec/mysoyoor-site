@@ -1,0 +1,101 @@
+/* 첫 화면(막 뒤 손)과 목록. kankan 쪽 문서는 site.css 를 그대로 쓴다 */
+:root{
+  --n:.3; --push:0; --dx:0px; --dy:0px;
+  --ink:#141413; --ink2:rgba(20,20,19,.38); --paper:#f7f6f2; --glow:0 0 18px rgba(40,40,36,.18);
+  /* Somesuch 실측: 1440 폭에서 글씨 24px·가장자리 20px, 686 폭에서 16px·14px */
+  --fz:clamp(16px,calc(1.061vw + 8.72px),24px);
+  --sp:clamp(14px,calc(.796vw + 8.5px),20px);
+  color-scheme:light;
+}
+html,body{margin:0;height:100%;background:#b9b8b2;overflow:hidden}
+body{font-family:"Archivo",system-ui,sans-serif;font-stretch:125%;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.hwf{position:fixed;inset:0;isolation:isolate;touch-action:none;overflow:hidden}
+.hwf:not(.list-open){user-select:none;-webkit-user-select:none}
+
+/* 막 전체 톤: 먼 손 사진을 아주 흐리게 깔아 빈 곳까지 같은 유리 질감으로 */
+.bg{position:absolute;inset:-8%;z-index:-4;background:url(/assets/hand/far.jpg) 62% 45%/cover;filter:blur(46px) saturate(.8);transform:scale(1.1)}
+/* 손: 손바닥 가운데를 화면의 한 점에 맞춘다 */
+.hand{position:absolute;z-index:-3;height:128vh;aspect-ratio:4/5;
+  left:calc(64vw + var(--dx) - 128vh * .8 * var(--ox-n));top:calc(60vh + var(--dy) - 128vh * var(--oy-n));
+  -webkit-mask:radial-gradient(40% 40% at var(--ox) var(--oy),#000 45%,transparent 100%);
+          mask:radial-gradient(40% 40% at var(--ox) var(--oy),#000 45%,transparent 100%);
+  transform-origin:var(--ox) var(--oy);background-size:cover}
+.far{--ox:52%;--oy:50%;--ox-n:.52;--oy-n:.50;background-image:url(/assets/hand/far.jpg);
+  opacity:calc(1 - var(--n));transform:scale(calc(1 + var(--n) * .33));filter:blur(calc(var(--n) * 4px))}
+.near{--ox:54%;--oy:53%;--ox-n:.54;--oy-n:.53;background-image:url(/assets/hand/near.jpg);
+  transform:scale(calc(.76 + var(--n) * .24 + var(--push) * .12));
+  opacity:calc(var(--n) * 1.7 - .55);
+  filter:blur(calc((1 - var(--n)) * 5px)) contrast(calc(1 + var(--push) * .55)) brightness(calc(1 - var(--push) * .22)) saturate(calc(1 + var(--push) * .3))}
+/* 꾹 누르면 손바닥이 막에 닿은 자리만 진하게 한 겹 더 */
+.press{opacity:calc(var(--push) * .75);mix-blend-mode:multiply;filter:contrast(1.9) brightness(1.15) blur(.4px);
+  -webkit-mask:radial-gradient(30% 30% at var(--ox) var(--oy),#000 40%,transparent 100%);mask:radial-gradient(30% 30% at var(--ox) var(--oy),#000 40%,transparent 100%)}
+/* 마우스로 끌면 막에 손가락으로 쓴 자국이 남았다 서서히 사라진다 */
+.ink{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.42;mix-blend-mode:multiply;filter:blur(1.2px)}
+/* 막 앞면: 위쪽 빛, 그레인 */
+.film{position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(90% 70% at 30% 0%,rgba(255,255,252,.32),rgba(255,255,252,0) 70%)}
+.film::after{content:"";position:absolute;inset:0;background-image:var(--grain,none);mix-blend-mode:overlay;opacity:.13}
+/* 목록이 열리면 흰 무지 바탕이 덮는다 */
+.veil{position:absolute;inset:0;z-index:-1;pointer-events:none;background:#fff;opacity:0;transition:opacity .9s cubic-bezier(.2,.7,.1,1)}
+.list-open .veil{opacity:1}
+
+/* 가운데 위 soyo: 첫 화면은 흰 글씨, 목록은 검정 */
+.logo{position:absolute;z-index:2;left:50%;top:calc(var(--sp) + env(safe-area-inset-top,0px));transform:translateX(-50%);
+  font-weight:800;font-size:var(--fz);line-height:.96;letter-spacing:-.02em;color:var(--paper);text-shadow:var(--glow);text-decoration:none;transition:color .5s}
+.list-open .logo{color:var(--ink);text-shadow:none}
+
+/* 첫 화면 아래 한 줄: Work → · 메일 */
+.homebar{position:absolute;z-index:2;left:0;right:0;bottom:calc(var(--sp) + env(safe-area-inset-bottom,0px));display:flex;justify-content:space-between;align-items:baseline;gap:1em;
+  padding:0 max(var(--sp),env(safe-area-inset-right,0px)) 0 max(var(--sp),env(safe-area-inset-left,0px));
+  font-weight:900;font-size:var(--fz);line-height:.96;color:var(--paper);text-shadow:var(--glow);transition:opacity .4s}
+.homebar a{text-decoration:none}
+.homebar a:hover{text-decoration:underline;text-decoration-thickness:.1em;text-underline-offset:1px}
+.list-open .homebar{opacity:0;visibility:hidden}
+@media (max-width:720px){.homebar .mail{font-size:.62em}}
+.credit{position:absolute;z-index:2;top:calc(var(--sp) + env(safe-area-inset-top,0px));right:max(var(--sp),env(safe-area-inset-right,0px));
+  font:400 10px/1 system-ui,sans-serif;color:var(--paper);opacity:.6;text-decoration:none}
+.list-open .credit{opacity:0}
+
+/* 목록: Somesuch 처럼 한 줄에 하나씩. 글씨 24px, 줄 간격 29px (1440 폭) */
+.list{position:absolute;left:0;right:0;bottom:0;top:calc(var(--sp) + var(--fz) * 1.6 + env(safe-area-inset-top,0px));
+  display:flex;flex-direction:column;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;color:var(--ink);
+  padding:0 max(var(--sp),env(safe-area-inset-right,0px)) calc(var(--sp) * 2 + env(safe-area-inset-bottom,0px)) max(var(--sp),env(safe-area-inset-left,0px));
+  opacity:0;visibility:hidden;transition:opacity .5s,visibility 0s .5s}
+.list > *{flex-shrink:0}
+.list-open .list{opacity:1;visibility:visible;transition-delay:.12s,0s}
+.tabs{display:flex;flex-wrap:wrap;gap:.3em .55em;margin:0 0 .96em;font-weight:900;font-size:var(--fz);line-height:.96}
+.tabs + .tabs{margin-top:-.4em}
+.tabs button{all:unset;cursor:pointer;color:var(--ink2);transition:color .2s}
+.tabs button:hover,.tabs button[aria-pressed=true]{color:var(--ink)}
+.tabs button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.tabs i{font-style:normal;color:var(--ink2)}
+.names,.empty{margin:0;font-weight:900;font-size:var(--fz);line-height:.96}
+.empty{color:var(--ink2)}
+.names .n{display:block;width:fit-content;margin-bottom:calc(15px - .375em);text-decoration:none;
+  opacity:0;transform:translateY(6px);transition:opacity .45s,transform .6s cubic-bezier(.2,.7,.1,1)}
+.list-open .names .n{opacity:1;transform:none;transition-delay:calc(.15s + var(--i) * 22ms)}
+a.n{cursor:pointer}
+.tabs button[aria-pressed=true],.names a.n:hover{text-decoration:underline;text-decoration-thickness:.1em;text-underline-offset:1px}
+
+/* 목록 맨 끝 정보란: 이름이 적어도 늘 화면 맨 아래 */
+.info{margin-top:auto;padding-top:clamp(64px,8vw,120px)}
+.info dl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px var(--sp);margin:0;font-weight:800;font-size:12px;line-height:1.45}
+.info div{min-width:0}
+.info dt{color:var(--ink2);margin-bottom:4px}
+.info dd{margin:0}
+.info a{text-decoration:none}
+.info a:hover{text-decoration:underline;text-underline-offset:2px}
+.info .wide{grid-column:span 2}
+@media (max-width:720px){.info dl{grid-template-columns:repeat(2,minmax(0,1fr))}.info .wide{grid-column:1/-1}}
+
+/* 제목에 올리면 커서 옆에 작게: 아티스트, 맡은 일·연도 */
+.tip{position:fixed;left:0;top:0;z-index:3;pointer-events:none;font-weight:800;font-size:12px;line-height:1.35;color:var(--ink);
+  background:rgba(244,243,239,.92);padding:.5em .7em;white-space:nowrap;opacity:0;transform:translate(var(--tx0,0),var(--ty0,0));transition:opacity .15s}
+.tip.on{opacity:1}
+.tip span{display:block}
+.tip span + span{color:rgba(20,20,19,.55)}
+
+@media (prefers-reduced-motion:reduce){.names .n,.veil,.list,.logo,.homebar{transition:none}}

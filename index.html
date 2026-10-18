@@ -7,58 +7,44 @@
 <meta name="description" content="SOYO. App, Video, Publishing, Marketing, Item.">
 <meta property="og:title" content="SOYO®">
 <meta property="og:description" content="App, Video, Publishing, Marketing, Item.">
-<meta name="theme-color" content="#f5f5f2">
+<meta name="theme-color" content="#b9b8b2">
 <link rel="icon" href="/favicon.png">
-<link rel="preload" href="/assets/fonts/plex-mono-500.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="/assets/site.css?v=202610190000">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,800..900&display=swap">
+<link rel="preload" href="/assets/hand/far.jpg" as="image">
+<link rel="stylesheet" href="/assets/home.css?v=202610190100">
 </head>
 <body>
-<a class="skip" href="/work">Skip to index</a>
-
-<!-- 첫 화면: 화면 너비를 꽉 채운 soyo 를 아래 끝에서 잘라 망점으로 찍는다 -->
+<!-- 첫 화면: 김 서린 막 뒤의 손. /work 면 같은 화면 위에 흰 목록이 덮인다 -->
 <header class="hwf">
-  <canvas aria-hidden="true"></canvas>
+  <div class="bg"></div>
+  <div class="hand far"></div>
+  <div class="hand near"></div>
+  <div class="hand near press"></div>
+  <canvas class="ink" aria-hidden="true"></canvas>
+  <div class="film"></div>
+  <div class="veil"></div>
   <h1 class="visually-hidden">SOYO</h1>
-  <div class="top">
-    <div class="brand"><a class="home" href="/"><strong>SOYO<sup>®</sup></strong></a><span>© 2026 · Seoul</span></div>
-    <nav class="col" aria-label="Work"><h2>Work</h2><ul class="cats"></ul></nav>
-    <nav class="col" aria-label="Contact"><h2>Contact</h2><ul><li><a href="mailto:mysoyoor@gmail.com">mysoyoor@gmail.com</a></li></ul></nav>
-  </div>
-  <div class="rule"><a href="/work">Work →</a></div>
+  <a class="logo" href="/">soyo</a>
+  <nav class="homebar"><a href="/work">Work →</a><a class="mail" href="mailto:mysoyoor@gmail.com">mysoyoor@gmail.com</a></nav>
+  <main class="list" aria-live="polite">
+    <footer class="info" id="info">
+      <dl>
+        <div><dt>Contact</dt><dd><a href="mailto:mysoyoor@gmail.com">mysoyoor@gmail.com</a></dd></div>
+        <div><dt>Company</dt><dd>SOYO</dd></div>
+        <div><dt>Director</dt><dd>JoYeJin</dd></div>
+        <div><dt>Business Reg. No.</dt><dd>443-13-03295</dd></div>
+        <div class="wide"><dt>Business</dt><dd>Information and communication, Media Contents Creation</dd></div>
+        <div class="wide"><dt>Address</dt><dd>16-7 Simin-ro 413beon-gil, Nonsan-si, Chungcheongnam-do, Republic of Korea</dd></div>
+      </dl>
+    </footer>
+  </main>
+  <div class="tip" aria-hidden="true"></div>
+  <a class="credit" href="https://unsplash.com/photos/wx6JF2-PAYg" target="_blank" rel="noopener">Photo · Unsplash</a>
 </header>
 
-<main id="work">
-  <div class="head">
-    <h2>Work</h2>
-  </div>
-  <ol class="list"></ol>
-</main>
-
-<footer class="foot">
-  <dl>
-    <div><dt>Company</dt><dd>SOYO</dd></div>
-    <div><dt>Director</dt><dd>JoYeJin</dd></div>
-    <div><dt>Business Reg. No.</dt><dd>443-13-03295</dd></div>
-    <div><dt>Business</dt><dd>Information and communication, Media Contents Creation</dd></div>
-    <div class="addr"><dt>Address</dt><dd>16-7 Simin-ro 413beon-gil, Nonsan-si, Chungcheongnam-do, Republic of Korea</dd></div>
-  </dl>
-  <div class="rule">
-    <button type="button" class="up">Back to top ↑</button>
-  </div>
-</footer>
-
-<img class="peek" alt="" aria-hidden="true">
-
-<!-- 사이트 안에서 여는 작업 창 (영상 재생 또는 그림) -->
-<dialog class="view" aria-labelledby="vname">
-  <div class="vbar"><span class="vmeta"></span><button type="button" class="vclose">Close ×</button></div>
-  <h2 class="vname" id="vname"></h2>
-  <div class="vbody"></div>
-</dialog>
-
-<script src="/assets/works.js?v=202610190000"></script>
-<script src="/assets/app.js?v=202610190000"></script>
-<script src="/assets/halftone.js?v=202610190000"></script>
+<script src="/assets/works.js?v=202610190100"></script>
+<script src="/assets/app.js?v=202610190100"></script>
 </body>
 </html>
