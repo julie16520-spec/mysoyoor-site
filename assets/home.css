@@ -55,10 +55,7 @@ a{color:inherit}
 .homebar a:hover{text-decoration:underline;text-decoration-thickness:.1em;text-underline-offset:1px}
 .list-open .homebar{opacity:0;visibility:hidden}
 @media (max-width:720px){.homebar .mail{font-size:.62em}}
-.credit{position:absolute;z-index:2;top:calc(var(--sp) + env(safe-area-inset-top,0px));right:max(var(--sp),env(safe-area-inset-right,0px));
-  font:400 10px/1 system-ui,sans-serif;color:var(--paper);opacity:.6;text-decoration:none}
-.list-open .credit{opacity:0}
-
+.list-open 
 /* 목록: Somesuch 처럼 한 줄에 하나씩. 글씨 24px, 줄 간격 29px (1440 폭) */
 .list{position:absolute;left:0;right:0;bottom:0;top:calc(var(--sp) + var(--fz) * 1.6 + env(safe-area-inset-top,0px));
   display:flex;flex-direction:column;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;color:var(--ink);
