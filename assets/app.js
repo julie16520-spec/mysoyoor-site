@@ -13,7 +13,7 @@
   // 손 움직임과 쓰기
   let px = null, py = null, down = false, n = .3, push = 0, dx = 0, dy = 0;
   const ink = document.querySelector(".ink"), ig = ink.getContext("2d");
-  let pen = null, sx = 0, sy = 0, inked = 0;
+  let pen = null, sx = 0, sy = 0, inked = 0, dirty = false, openedAt = 0;
   const fit = () => { const r = devicePixelRatio || 1; ink.width = innerWidth * r; ink.height = innerHeight * r; ig.setTransform(r, 0, 0, r, 0, 0);
     ig.lineCap = ig.lineJoin = "round"; ig.lineWidth = 18; ig.strokeStyle = "#1c1b19"; };
   fit(); addEventListener("resize", fit);
@@ -21,7 +21,7 @@
     if (!pen) return;
     // 조금이라도 끌면 누르기(손 밀기) 대신 글씨 쓰기
     if (Math.hypot(px - sx, py - sy) > 6) down = false;
-    ig.beginPath(); ig.moveTo(pen.x, pen.y); ig.lineTo(px, py); ig.stroke(); pen = { x: px, y: py }; inked = performance.now(); });
+    ig.beginPath(); ig.moveTo(pen.x, pen.y); ig.lineTo(px, py); ig.stroke(); pen = { x: px, y: py }; inked = performance.now(); dirty = true; });
   hwf.addEventListener("pointerdown", e => { if (e.target.closest("a,button") || listOpen) return; px = sx = e.clientX; py = sy = e.clientY; down = true; pen = { x: px, y: py }; });
   addEventListener("pointerup", () => { down = false; pen = null; });
   hwf.addEventListener("pointerleave", () => { px = py = null; down = false; pen = null; });
@@ -42,11 +42,17 @@
     const k = still ? 1 : .045;
     n += (want - n) * k; push += ((down ? 1 : 0) - push) * (down ? .09 : .06);
     dx += (tdx - dx) * k * .6; dy += (tdy - dy) * k * .6;
-    root.setProperty("--n", n.toFixed(4)); root.setProperty("--push", push.toFixed(4));
-    root.setProperty("--dx", dx.toFixed(1) + "px"); root.setProperty("--dy", dy.toFixed(1) + "px");
-    // 쓴 자국은 3초쯤에 걸쳐 흐려진다
-    if (performance.now() - inked > 4500) ig.clearRect(0, 0, W, H);
-    else { ig.globalCompositeOperation = "destination-out"; ig.fillStyle = "rgba(0,0,0,.018)"; ig.fillRect(0, 0, W, H); ig.globalCompositeOperation = "source-over"; }
+    // 목록이 다 덮이면(흰 바탕) 손은 안 보이니 멈춘다
+    if (!listOpen || performance.now() - openedAt < 1200) {
+      const hs = hwf.style;
+      hs.setProperty("--n", n.toFixed(4)); hs.setProperty("--push", push.toFixed(4));
+      hs.setProperty("--dx", dx.toFixed(1) + "px"); hs.setProperty("--dy", dy.toFixed(1) + "px");
+    }
+    // 쓴 자국은 3초쯤에 걸쳐 흐려진다. 아무것도 안 썼으면 건드리지 않는다
+    if (dirty) {
+      if (performance.now() - inked > 4500) { ig.clearRect(0, 0, W, H); dirty = false; }
+      else { ig.globalCompositeOperation = "destination-out"; ig.fillStyle = "rgba(0,0,0,.018)"; ig.fillRect(0, 0, W, H); ig.globalCompositeOperation = "source-over"; }
+    }
     if (!still) requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
@@ -77,13 +83,11 @@
     });
     parts.push(ws.length ? box : mk("p", "empty", "Coming soon"), info);
     listEl.replaceChildren(...parts);
-    // 분류를 바꿀 때마다 제목이 다시 차례로 올라온다
-    hwf.classList.remove("list-open"); void listEl.offsetWidth; hwf.classList.add("list-open");
   }
 
   const isWork = () => /^\/work(\.html)?\/?$/.test(location.pathname);
   const route = () => {
-    if (isWork()) { if (!listOpen) { cur = "all"; curSub = "all"; listEl.scrollTop = 0; listOpen = true; render(); } }
+    if (isWork()) { if (!listOpen) { cur = "all"; curSub = "all"; listEl.scrollTop = 0; listOpen = true; openedAt = performance.now(); render(); hwf.classList.add("list-open"); } }
     else { listOpen = false; hwf.classList.remove("list-open"); tip.classList.remove("on"); }
   };
   const go = path => { if (location.pathname !== path) history.pushState(null, "", path); route(); };

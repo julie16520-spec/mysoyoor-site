@@ -18,19 +18,20 @@ a{color:inherit}
 /* 막 전체 톤: 먼 손 사진을 아주 흐리게 깔아 빈 곳까지 같은 유리 질감으로 */
 .bg{position:absolute;inset:-8%;z-index:-4;background:url(/assets/hand/far.jpg) 62% 45%/cover;filter:blur(46px) saturate(.8);transform:scale(1.1)}
 /* 손: 손바닥 가운데를 화면의 한 점에 맞춘다 */
-.hand{position:absolute;z-index:-3;height:128vh;aspect-ratio:4/5;
+.hand{position:absolute;z-index:-3;height:128vh;aspect-ratio:4/5;will-change:transform,opacity;
   left:calc(64vw + var(--dx) - 128vh * .8 * var(--ox-n));top:calc(60vh + var(--dy) - 128vh * var(--oy-n));
   -webkit-mask:radial-gradient(40% 40% at var(--ox) var(--oy),#000 45%,transparent 100%);
           mask:radial-gradient(40% 40% at var(--ox) var(--oy),#000 45%,transparent 100%);
   transform-origin:var(--ox) var(--oy);background-size:cover}
+/* 흐림 정도는 매 프레임 다시 그리면 무거워서, 흐린 판과 또렷한 판을 미리 두고 투명도로만 섞는다 */
 .far{--ox:52%;--oy:50%;--ox-n:.52;--oy-n:.50;background-image:url(/assets/hand/far.jpg);
-  opacity:calc(1 - var(--n));transform:scale(calc(1 + var(--n) * .33));filter:blur(calc(var(--n) * 4px))}
+  opacity:calc(1 - var(--n));transform:scale(calc(1 + var(--n) * .33));filter:blur(1.5px)}
 .near{--ox:54%;--oy:53%;--ox-n:.54;--oy-n:.53;background-image:url(/assets/hand/near.jpg);
-  transform:scale(calc(.76 + var(--n) * .24 + var(--push) * .12));
-  opacity:calc(var(--n) * 1.7 - .55);
-  filter:blur(calc((1 - var(--n)) * 5px)) contrast(calc(1 + var(--push) * .55)) brightness(calc(1 - var(--push) * .22)) saturate(calc(1 + var(--push) * .3))}
+  transform:scale(calc(.76 + var(--n) * .24 + var(--push) * .12))}
+.near.soft{opacity:calc(var(--n) * 1.7 - .55);filter:blur(5px)}
+.near.sharp{opacity:calc((var(--n) * 1.7 - .55) * var(--n))}
 /* 꾹 누르면 손바닥이 막에 닿은 자리만 진하게 한 겹 더 */
-.press{opacity:calc(var(--push) * .75);mix-blend-mode:multiply;filter:contrast(1.9) brightness(1.15) blur(.4px);
+.near.press{opacity:calc(var(--push) * .75);mix-blend-mode:multiply;filter:contrast(1.9) brightness(1.15) blur(.4px);
   -webkit-mask:radial-gradient(30% 30% at var(--ox) var(--oy),#000 40%,transparent 100%);mask:radial-gradient(30% 30% at var(--ox) var(--oy),#000 40%,transparent 100%)}
 /* 마우스로 끌면 막에 손가락으로 쓴 자국이 남았다 서서히 사라진다 */
 .ink{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.42;mix-blend-mode:multiply;filter:blur(1.2px)}
@@ -71,9 +72,10 @@ a{color:inherit}
 .tabs i{font-style:normal;color:var(--ink2)}
 .names,.empty{margin:0;font-weight:900;font-size:var(--fz);line-height:.96}
 .empty{color:var(--ink2)}
+/* 제목은 새로 그려질 때마다 차례로 올라온다 */
 .names .n{display:block;width:fit-content;margin-bottom:calc(15px - .375em);text-decoration:none;
-  opacity:0;transform:translateY(6px);transition:opacity .45s,transform .6s cubic-bezier(.2,.7,.1,1)}
-.list-open .names .n{opacity:1;transform:none;transition-delay:calc(.15s + var(--i) * 22ms)}
+  animation:rise .6s cubic-bezier(.2,.7,.1,1) both;animation-delay:calc(.15s + var(--i) * 22ms)}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}}
 a.n{cursor:pointer}
 .tabs button[aria-pressed=true],.names a.n:hover{text-decoration:underline;text-decoration-thickness:.1em;text-underline-offset:1px}
 
@@ -95,4 +97,4 @@ a.n{cursor:pointer}
 .tip span{display:block}
 .tip span + span{color:rgba(20,20,19,.55)}
 
-@media (prefers-reduced-motion:reduce){.names .n,.veil,.list,.logo,.homebar{transition:none}}
+@media (prefers-reduced-motion:reduce){.veil,.list,.logo,.homebar{transition:none}.names .n{animation:none}}
