@@ -1,7 +1,7 @@
 /* 첫 화면(막 뒤 손)과 목록. kankan 쪽 문서는 site.css 를 그대로 쓴다 */
 :root{
   --n:.3; --push:0; --dx:0px; --dy:0px;
-  --ink:#141413; --ink2:rgba(20,20,19,.38); --paper:#f7f6f2; --glow:0 0 18px rgba(40,40,36,.18);
+  --ink:#141413; --ink2:rgba(20,20,19,.38); --hot:#e5231b; --paper:#f7f6f2; --glow:0 0 18px rgba(40,40,36,.18);
   /* Somesuch 실측: 1440 폭에서 글씨 24px·가장자리 20px, 686 폭에서 16px·14px */
   --fz:clamp(16px,calc(1.061vw + 8.72px),24px);
   --sp:clamp(14px,calc(.796vw + 8.5px),20px);
@@ -69,7 +69,7 @@ a{color:inherit}
 .tabs{display:flex;flex-wrap:wrap;gap:.3em .55em;margin:0 0 .96em;font-weight:900;font-size:var(--fz);line-height:.96}
 .tabs + .tabs{margin-top:-.4em}
 .tabs button{all:unset;cursor:pointer;color:var(--ink2);transition:color .2s}
-.tabs button:hover,.tabs button[aria-pressed=true]{color:var(--ink)}
+.tabs button[aria-pressed=true]{color:var(--ink)}
 .tabs button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .tabs i{font-style:normal;color:var(--ink2)}
 .names,.empty{margin:0;font-weight:900;font-size:var(--fz);line-height:.96}
@@ -79,6 +79,9 @@ a{color:inherit}
   animation:rise .6s cubic-bezier(.2,.7,.1,1) both;animation-delay:calc(.15s + var(--i) * 22ms)}
 @keyframes rise{from{opacity:0;transform:translateY(6px)}}
 a.n{cursor:pointer}
+/* 글자 버튼에 올리면 빨갛게 */
+.names .n,.homebar a,.logo,.info a{transition:color .18s}
+.tabs button:hover,.names .n:hover,.homebar a:hover,.logo:hover,.info a:hover{color:var(--hot)}
 .tabs button[aria-pressed=true],.names a.n:hover{text-decoration:underline;text-decoration-thickness:.1em;text-underline-offset:1px}
 
 /* 목록 맨 끝 정보란: 이름이 적어도 늘 화면 맨 아래 */
