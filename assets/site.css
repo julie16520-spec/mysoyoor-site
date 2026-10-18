@@ -110,7 +110,7 @@ html:has(.view[open]) { overflow: hidden; }
 .foot .rule { margin-top: 28px; justify-content: flex-end; }
 
 @media (max-width: 720px) {
-  .hwf { height: 72svh; }
+  .hwf { height: 100svh; }
   .top { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); row-gap: 18px; }
   .brand, .top .col:last-child { grid-column: 1 / -1; }
   .list a, .list div, .list button { grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; }
