@@ -15,8 +15,9 @@ a{color:inherit}
 .hwf{position:fixed;inset:0;isolation:isolate;touch-action:none;overflow:hidden}
 .hwf:not(.list-open){user-select:none;-webkit-user-select:none}
 
-/* 막 전체 톤: 먼 손 사진을 아주 흐리게 깔아 빈 곳까지 같은 유리 질감으로 */
-.bg{position:absolute;inset:-8%;z-index:-4;background:url(/assets/hand/far.jpg) 62% 45%/cover;filter:blur(46px) saturate(.8);transform:scale(1.1)}
+/* 막 전체 톤: 사진 없이 막 색만. 오른쪽 위가 밝고 왼쪽 아래로 갈수록 어두운 회색 (사진 속 몸 그림자가 안 남게) */
+.bg{position:absolute;inset:0;z-index:-4;
+  background:radial-gradient(70% 60% at 85% 8%,#e9e9e2 0%,rgba(233,233,226,0) 70%),linear-gradient(160deg,#b4b2a9 0%,#8f8c84 45%,#6a6760 100%)}
 /* 손: 손바닥 가운데를 화면의 한 점에 맞춘다 */
 .hand{position:absolute;z-index:-3;height:128vh;aspect-ratio:4/5;will-change:transform,opacity;
   left:calc(64vw + var(--dx) - 128vh * .8 * var(--ox-n));top:calc(60vh + var(--dy) - 128vh * var(--oy-n));
